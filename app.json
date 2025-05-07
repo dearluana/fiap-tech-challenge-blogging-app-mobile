@@ -1,8 +1,7 @@
 {
     "expo": {
-      "name": "Blogging App",
-      "slug": "fiap-tech-challenge-blogging-app-mobile",
-      "platforms": ["ios", "android"],
+      "name": "BloggingApp",
+      "slug": "blogging-app",
       "version": "1.0.0",
       "orientation": "portrait",
       "icon": "./assets/icon.png",
@@ -11,9 +10,12 @@
         "resizeMode": "contain",
         "backgroundColor": "#ffffff"
       },
+      "updates": {
+        "fallbackToCacheTimeout": 0
+      },
+      "assetBundlePatterns": ["**/*"],
       "android": {
-        "package": "com.fiaptc.bloggingappmobile"
+        "package": "com.fiap.bloggingapp"
       }
     }
   }
-  
