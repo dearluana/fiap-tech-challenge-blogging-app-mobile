@@ -11,4 +11,3 @@ export default function App() {
     </AuthContext.Provider>
   );
 }
-// This is the main entry point of the application. It uses the AuthContext to provide authentication state to the rest of the app.
