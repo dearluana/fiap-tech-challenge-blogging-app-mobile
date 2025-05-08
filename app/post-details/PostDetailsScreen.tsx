@@ -6,15 +6,17 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../../types/navigation'; //refazer o arquivo
 import { useAuth } from '@/hooks/useAuth';
+import AppLayout from '@/app/components/AppLayout';
 import styles from './styles';
 
 export default function PostDetailsScreen() {
-  const route = useRoute<any>();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { token } = useAuth();
-  const { id } = route.params;
+  const route = useRoute();
+  const { id } = route.params as { id: string };
 
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -63,43 +65,35 @@ export default function PostDetailsScreen() {
   };
 
   const handleEdit = () => {
-    navigation.navigate('edit-post' as never, { id } as never);
+    navigation.navigate('edit-post', { id });
   };
 
   useEffect(() => {
     fetchPost();
   }, []);
 
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
-  if (!post) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Post não encontrado.</Text>
-      </View>
-    );
-  }
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{post.title}</Text>
-      <Text style={styles.content}>{post.content}</Text>
+    <AppLayout>
+      {loading ? (
+        <ActivityIndicator />
+      ) : !post ? (
+        <Text style={styles.errorText}>Post não encontrado.</Text>
+      ) : (
+        <View style={styles.container}>
+          <Text style={styles.title}>{post.title}</Text>
+          <Text style={styles.content}>{post.content}</Text>
 
-      <View style={styles.actions}>
-        <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
-          <Text style={styles.actionText}>Editar</Text>
-        </TouchableOpacity>
+          <View style={styles.actions}>
+            <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
+              <Text style={styles.actionText}>Editar</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-          <Text style={styles.actionText}>Excluir</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+              <Text style={styles.actionText}>Excluir</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+    </AppLayout>
   );
 }

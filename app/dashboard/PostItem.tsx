@@ -16,7 +16,7 @@ export default function PostItem({ post }: PostProps) {
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate('post-details' as never, { id: post._id } as never)}
+      onPress={() => navigation.navigate('post-details', { id: post._id })}
     >
       <Text style={styles.cardTitle}>{post.title}</Text>
       <Text numberOfLines={2} style={styles.cardContent}>{post.content}</Text>

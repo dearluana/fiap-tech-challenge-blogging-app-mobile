@@ -15,6 +15,7 @@ export const AuthContext = createContext<AuthContextType>({
   loading: true,
   login: async () => {},
   logout: async () => {},
+  // Removed misplaced and redundant type declaration
 });
 
 type Props = {

@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '@/hooks/useAuth';
 import PostItem from './PostItem';
 import styles from './styles';
+import AppLayout from '@/app/components/AppLayout';
 
 export default function DashboardScreen() {
   const { token, user } = useAuth();
@@ -41,11 +42,11 @@ export default function DashboardScreen() {
   }, []);
 
   const handleNewPost = () => {
-    navigation.navigate('add-post' as never); // ajuste para sua rota real
+    navigation.navigate('add-post' as never);
   };
 
   return (
-    <View style={styles.container}>
+    <AppLayout>
       <Text style={styles.title}>Bem-vindo(a), {user?.name || 'Usuário'} 👋</Text>
 
       <TouchableOpacity style={styles.button} onPress={handleNewPost}>
@@ -62,6 +63,6 @@ export default function DashboardScreen() {
           contentContainerStyle={{ paddingVertical: 10 }}
         />
       )}
-    </View>
+    </AppLayout>
   );
 }

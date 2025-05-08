@@ -57,18 +57,51 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
   },
-});
+  primaryLink: {
+    color: '#3b82f6',
+    fontSize: 14,
+    marginTop: 10,
+    textDecorationLine: 'underline',
+  },
+  errorText: {
+    color: '#ef4444',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  secondaryButton: {
+    backgroundColor: '#3b82f6',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 6,
+    width: '100%',
+  },
+    secondaryLink: {
+      color: '#007BFF',
+      fontSize: 14,
+      marginTop: 10,
+      textDecorationLine: 'underline',
+    },
+}); 
 
 export default styles;
-// src/screens/Login/styles.ts
-// src/screens/Login/index.tsx
-// import React, { useState } from 'react';
-// import { View, Text, Alert } from 'react-native';
-// import Input from '@/components/Input';
-// import Button from '@/components/Button';
-// import { styles } from './styles';
-//
-// const LoginScreen = () => {
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [loading, setLoading] = useState(false);     
+// This file contains the styles for the login screen of a React Native application.
+// It uses StyleSheet from 'react-native' to create a consistent and reusable set of styles.
+// The styles include properties for the container, logo, form, title, labels, inputs, buttons, and button text.
+// The styles are designed to create a clean and modern look, with a focus on usability and accessibility.
+// The container has a light background color and centers its content.
+// The logo is sized appropriately and has a margin for spacing.
+// The form container has a white background, padding, rounded corners, and shadow effects for depth.
+// The title is styled with a larger font size and bold weight for emphasis.    
