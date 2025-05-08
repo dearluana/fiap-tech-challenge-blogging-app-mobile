@@ -1,3 +1,5 @@
+// app/context/AuthContext.tsx
+
 import React, { createContext, useEffect, useState, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -15,7 +17,6 @@ export const AuthContext = createContext<AuthContextType>({
   loading: true,
   login: async () => {},
   logout: async () => {},
-  // Removed misplaced and redundant type declaration
 });
 
 type Props = {
@@ -29,12 +30,17 @@ export function AuthProvider({ children }: Props) {
 
   useEffect(() => {
     const loadStoredToken = async () => {
-      const savedToken = await AsyncStorage.getItem('authToken');
-      if (savedToken) {
-        setToken(savedToken);
-        await fetchUser(savedToken);
+      try {
+        const savedToken = await AsyncStorage.getItem('authToken');
+        if (savedToken) {
+          setToken(savedToken);
+          await fetchUser(savedToken);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar token do AsyncStorage:', error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     loadStoredToken();
   }, []);
@@ -50,6 +56,8 @@ export function AuthProvider({ children }: Props) {
       if (response.ok) {
         const data = await response.json();
         setUser(data);
+      } else {
+        console.warn('Não foi possível obter os dados do usuário');
       }
     } catch (error) {
       console.error('Erro ao buscar dados do usuário:', error);
@@ -57,15 +65,23 @@ export function AuthProvider({ children }: Props) {
   };
 
   const login = async (newToken: string) => {
-    await AsyncStorage.setItem('authToken', newToken);
-    setToken(newToken);
-    await fetchUser(newToken);
+    try {
+      await AsyncStorage.setItem('authToken', newToken);
+      setToken(newToken);
+      await fetchUser(newToken);
+    } catch (error) {
+      console.error('Erro ao fazer login:', error);
+    }
   };
 
   const logout = async () => {
-    await AsyncStorage.removeItem('authToken');
-    setToken(null);
-    setUser(null);
+    try {
+      await AsyncStorage.removeItem('authToken');
+      setToken(null);
+      setUser(null);
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
   };
 
   return (
@@ -74,14 +90,3 @@ export function AuthProvider({ children }: Props) {
     </AuthContext.Provider>
   );
 }
-export default AuthProvider;
-//   onChangeText={setEmail}
-//         placeholder="Digite seu email"
-//       />
-//
-//       <Text style={styles.label}>Senha</Text>
-//       <TextInput
-//         style={styles.input}
-//         value={password}
-//         onChangeText={setPassword}
-//         placeholder="Digite sua senha"       

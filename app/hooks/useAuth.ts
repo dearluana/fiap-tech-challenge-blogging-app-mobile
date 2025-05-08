@@ -1,18 +1,15 @@
-import { createContext, useContext } from 'react';
+// app/hooks/useAuth.ts
 
-type AuthContextType = {
-  token: string | null;
-  setToken: (token: string | null) => void;
-};
-
-export const AuthContext = createContext<AuthContextType>({
-  token: null,
-  setToken: () => {},
-});
+import { useContext } from 'react';
+import { AuthContext } from '@/app/context/AuthContext';
 
 export const useAuth = () => useContext(AuthContext);
-export const AuthProvider = AuthContext.Provider;
-export const AuthConsumer = AuthContext.Consumer;
-// This is a custom hook that provides the authentication context to components that need it.
-// It uses the useContext hook to access the AuthContext and return the token and setToken function.
-// The AuthProvider and AuthConsumer are also exported for use in other parts of the application.
+//     } catch (error) {
+//       console.error('Erro ao buscar usuário:', error);
+//     }
+//   };
+//
+//   const login = async (token: string) => {
+//     try {
+//       await AsyncStorage.setItem('authToken', token);
+//       setToken(token);
