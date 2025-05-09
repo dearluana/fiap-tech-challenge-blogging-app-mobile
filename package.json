@@ -9,6 +9,7 @@
     "expo": "^52.0.46",
     "expo-constants": "~17.0.8",
     "expo-router": "~4.0.21",
+    "formik": "^2.4.6",
     "metro": "^0.81.0",
     "react-native": "0.76.9",
     "react-native-gesture-handler": "~2.20.2",
@@ -19,8 +20,10 @@
     "yup": "^1.6.1"
   },
   "devDependencies": {
+    "@react-native-community/cli": "^18.0.0",
     "@types/axios": "^0.9.36",
     "@types/react": "^18.3.12",
+    "depcheck": "^1.4.7",
     "typescript": "^5.3.3"
   }
 }
