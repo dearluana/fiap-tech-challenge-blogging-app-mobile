@@ -7,7 +7,7 @@ export type User = {
     updatedAt: string;
   };
   
-  export type UserCreate = {
+  export type createUser = {
     username: string;
     password: string;
   };

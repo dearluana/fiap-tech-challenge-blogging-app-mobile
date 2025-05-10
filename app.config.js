@@ -6,10 +6,17 @@ export default {
     slug: 'blogging-app',
     version: '1.0.0',
     extra: {
-      API_URL: process.env.API_URL,
+      API_URL: "http://10.0.2.2:3000" // Use your backend IP here
+      // Add any other environment variables you need here
     },
-  },
+    // The SDK version is not specified here, as it will be determined by the Expo CLI
+    icon: './assets/icon.png',
+  "plugins": [
+    "expo-secure-store"
+  ]
+  }
 };
+
 // This is the configuration for the Expo app.
 // It includes the app name, slug, version, and any extra environment variables.
 // The API_URL is being pulled from the environment variables using dotenv.

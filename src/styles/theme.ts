@@ -1,12 +1,22 @@
 export const theme = {
-    colors: {
-      black: '#000000',
-      white: '#ffffff',
-      lightBlue: '#abc1cd',
-      dark1: '#25292c',
-      dark2: '#0a0c10',
-      magent: '#e8135b',
-      grey: '#7f8182',
-    },
-  };
-  
+  colors: {
+    primary: '#6200EE',
+    background: '#FFFFFF',
+    surface: '#F5F5F5',
+    textPrimary: '#000000',
+    textSecondary: '#6B6B6B',
+    error: '#B00020',
+  },
+  spacing: {
+    xs: 4,
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32,
+  },
+  borderRadius: {
+    sm: 4,
+    md: 8,
+    lg: 16,
+  },
+};

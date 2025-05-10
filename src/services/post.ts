@@ -1,75 +1,84 @@
-import { PostCreate, PostUpdate } from "@/types/post";
+import Constants from 'expo-constants';
+import { PostCreate, PostUpdate } from '@/types/post';
 
-// export interface PostData {
-//   id: number;
-//   title: string;
-//   content: string;
-//   createdAt: string;
-//   updatedAt: string;
-// }
+const { API_URL } = Constants.manifest?.extra || Constants.expoConfig?.extra || {};
 
-type Header = {
-  'Content-Type': string;
-  Authorization: string;
+if (!API_URL) {
+  throw new Error('API_URL não está definido nas variáveis de ambiente do Expo.');
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL + 'post';
+const handleResponse = async (response: Response) => {
+  const contentType = response.headers.get('Content-Type');
+  const isJson = contentType?.includes('application/json');
+  const data = isJson ? await response.json() : null;
 
-const headers = (token: string) : Header => {
-  return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  };
+  if (!response.ok) {
+    const errorMessage = data?.message || `Erro: ${response.status}`;
+    throw new Error(errorMessage);
+  }
+
+  return data;
 };
 
-export const PostService = {
+export const postService = {
   async getAll(token: string, page = 1, limit = 10) {
-    const res = await fetch(`${BASE_URL}?page=${page}&limit=${limit}`, {
-      headers: headers(token),
+    const response = await fetch(`${API_URL}/post?page=${page}&limit=${limit}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     });
-    return res.json();
+
+    return handleResponse(response);
   },
 
-  async getById(token: string, id: number) {
-    const res = await fetch(`${BASE_URL}/${id}`, {
-      headers: headers(token),
+  async getById(id: number, token: string) {
+    const response = await fetch(`${API_URL}/post/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     });
-    return res.json();
+
+    return handleResponse(response);
   },
 
-  async create(token: string, data: PostCreate) {
-    const res = await fetch(BASE_URL, {
+  async create(data: PostCreate, token: string) {
+    const response = await fetch(`${API_URL}/post`, {
       method: 'POST',
-      headers: headers(token),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(data),
     });
-    return res.json();
+
+    return handleResponse(response);
   },
 
-  async update(token: string, postData: PostUpdate) {
-    const res = await fetch(BASE_URL, {
+  async update(postData: PostUpdate, token: string) {
+    const response = await fetch(`${API_URL}/post`, {
       method: 'PUT',
-      headers: headers(token),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(postData),
     });
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(errorText);
-    }
-
-    return res.json();
+    return handleResponse(response);
   },
 
-  async deletePost(token: string, id: number) {
-    const res = await fetch(`${BASE_URL}/${id}`, {
+  async deletePost(id: number, token: string) {
+    const response = await fetch(`${API_URL}/post/${id}`, {
       method: 'DELETE',
-      headers: headers(token),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     });
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(errorText || 'Erro ao deletar o post');
-    }
-  }
+    return handleResponse(response);
+  },
 };
+  

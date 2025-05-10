@@ -1,6 +1,7 @@
 {
     "expo": {
       "name": "BloggingApp",
+      "newArchEnabled": true,
       "slug": "blogging-app",
       "version": "1.0.0",
       "orientation": "portrait",
@@ -15,7 +16,16 @@
       },
       "assetBundlePatterns": ["**/*"],
       "android": {
-        "package": "com.fiap.bloggingapp"
+        "package": "com.fiap.bloggingapp",
+        "expo": {
+          "extra": {
+            "API_URL": "http://10.0.2.2:3000"
+          }
+        },
+          "plugins": [
+            "expo-secure-store"
+          ]
       }
     }
   }
+  
