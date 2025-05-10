@@ -6,7 +6,7 @@ export default {
     slug: 'blogging-app',
     version: '1.0.0',
     extra: {
-      API_URL: "http://10.0.2.2:3000" // Use your backend IP here
+      API_URL: "http://192.168.15.24:3000" // Use your backend IP here
       // Add any other environment variables you need here
     },
     // The SDK version is not specified here, as it will be determined by the Expo CLI

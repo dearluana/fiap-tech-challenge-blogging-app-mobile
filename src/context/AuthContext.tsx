@@ -1,9 +1,8 @@
+// src/context/AuthContext.tsx
+
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
-import { userService } from '../services/user';
-
-
 
 interface AuthContextType {
   userToken: string | null;
@@ -35,9 +34,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (username: string, password: string) => {
     try {
-      const { token } = await userService.login(username, password);  
-      await AsyncStorage.setItem('@blogApp:token', token);
-      setUserToken(token);
+      // SIMULA login e token
+      if (username === 'admin' && password === '123') {
+        const fakeToken = 'fake-jwt-token';
+        await AsyncStorage.setItem('@blogApp:token', fakeToken);
+        setUserToken(fakeToken);
+      } else {
+        throw new Error('Credenciais inválidas');
+      }
     } catch (error) {
       console.error('Erro ao fazer login:', error);
       Alert.alert('Erro de login', 'Usuário ou senha inválidos');
@@ -52,10 +56,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error('Erro ao fazer logout:', error);
     }
   };
-// Ensure this file imports loginService correctly
+
   return (
     <AuthContext.Provider value={{ userToken, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+// export default AuthProvider;
+// import { AuthProvider } from './AuthContext';
+// import { NavigationContainer } from '@react-navigation/native';
+// import { createStackNavigator } from '@react-navigation/stack';
+// import LoginScreen from '../screens/LoginScreen';
+// import HomeScreen from '../screens/HomeScreen';
+//
+// const Stack = createStackNavigator();
+//
+// export default function App() {
+//   return (
+//     <AuthProvider>
+//       <NavigationContainer>
+//         <Stack.Navigator initialRouteName="Login">     

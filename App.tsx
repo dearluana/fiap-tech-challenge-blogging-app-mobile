@@ -1,12 +1,13 @@
+// App.tsx
 import React from 'react';
 import { AuthProvider } from './src/context/AuthContext';
-import AppNavigator from './src/routes/AppNavigator';
+import Routes from './src/routes';
 
 export default function App() {
   return (
     <AuthProvider>
-      <AppNavigator />
+      <Routes />
     </AuthProvider>
   );
 }
-// App.tsx
+// // This code sets up the main application component, wrapping the routes with the AuthProvider to manage authentication state.
