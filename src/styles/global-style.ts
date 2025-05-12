@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native';
-import colors from './theme';
+import { theme } from './theme';
 
 const globalStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: theme.colors.background,
     padding: 20,
   },
 });

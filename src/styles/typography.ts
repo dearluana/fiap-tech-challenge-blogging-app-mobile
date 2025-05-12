@@ -1,25 +1,36 @@
 import { StyleSheet } from 'react-native';
-import colors from './theme';
+import { theme } from './theme';
 
 const typography = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: colors.text,
+    color: theme.colors.textPrimary,
   },
   subtitle: {
     fontSize: 16,
-    color: colors.textSecondary,
+    color: theme.colors.textSecondary,
   },
   paragraph: {
     fontSize: 14,
-    color: colors.text,
+    color: theme.colors.textPrimary,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.white,
+    color: theme.colors.white,
   },
 });
 
 export default typography;
+//   marginBottom: 8,
+//   fontSize: 16,
+//   fontWeight: 'bold',
+//   color: '#111827',
+//   },
+//   empty: {
+  //   textAlign: 'center',
+//   marginTop: 50,
+//   color: '#94a3b8',
+//   },
+//   },   

@@ -5,6 +5,7 @@ export const theme = {
     surface: '#F5F5F5',
     textPrimary: '#000000',
     textSecondary: '#6B6B6B',
+    white: '#FFFFFF',
     error: '#B00020',
   },
   spacing: {
@@ -20,3 +21,13 @@ export const theme = {
     lg: 16,
   },
 };
+//     borderRadius: 8,
+//     marginBottom: 16,
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 2 },
+//     shadowOpacity: 0.25,
+//     shadowRadius: 4,
+//     elevation: 5,
+//   },
+//   title: {
+//     fontSize: 18,    
