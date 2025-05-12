@@ -1,3 +1,5 @@
+// src/context/AuthContext.tsx
+
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
@@ -76,6 +78,3 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
-// This code defines an authentication context for a React Native application using the Context API.
-// The AuthContext provides authentication-related data and functions, including userToken, userRole, loading state, login, and logout functions.
-// The AuthProvider component manages the authentication state and provides the context to its children.  

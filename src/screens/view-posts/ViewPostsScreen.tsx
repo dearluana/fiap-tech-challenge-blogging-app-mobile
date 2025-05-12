@@ -1,3 +1,5 @@
+// src/screens/view-posts/ViewPostsScreen.tsx
+
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -10,7 +12,7 @@ type ViewPostsScreenProp = StackNavigationProp<RootStackParamList, 'view-posts'>
 
 export default function ViewPostsScreen() {
   const navigation = useNavigation<ViewPostsScreenProp>();
-  const { logout } = useAuth(); // Função de logout
+  const { logout } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
 
   const loadPosts = async () => {
@@ -21,6 +23,11 @@ export default function ViewPostsScreen() {
   useEffect(() => {
     loadPosts();
   }, []);
+
+  const handleLogout = async () => {
+    console.log('Botão de logout pressionado');
+    await logout();
+  };
 
   const handlePostClick = (id: string) => {
     navigation.navigate('post-details', { id });
@@ -35,8 +42,7 @@ export default function ViewPostsScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Botão de logout no topo */}
-      <TouchableOpacity onPress={logout} style={styles.logoutButton}>
+      <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
         <Text style={styles.logoutButtonText}>Sair</Text>
       </TouchableOpacity>
 
@@ -73,3 +79,4 @@ const styles = StyleSheet.create({
   title: { fontSize: 18, fontWeight: 'bold', marginBottom: 8 },
   empty: { textAlign: 'center', marginTop: 50, color: '#94a3b8' },
 });
+//   empty: { textAlign: 'center', marginTop: 50, color: '#94a3b8' },
