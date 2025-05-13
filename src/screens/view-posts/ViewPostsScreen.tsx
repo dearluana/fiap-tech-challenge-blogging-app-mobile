@@ -1,12 +1,18 @@
-// src/screens/view-posts/ViewPostsScreen.tsx
-
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList } from '@/routes/types';
 import { getPosts, Post } from '@/services/mock-post';
 import { useAuth } from '@/hooks/useAuth';
+import theme from '@/styles/theme';
 
 type ViewPostsScreenProp = StackNavigationProp<RootStackParamList, 'view-posts'>;
 
@@ -14,6 +20,7 @@ export default function ViewPostsScreen() {
   const navigation = useNavigation<ViewPostsScreenProp>();
   const { logout } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
+  const canGoBack = navigation.canGoBack();
 
   const loadPosts = async () => {
     const data = await getPosts();
@@ -25,8 +32,11 @@ export default function ViewPostsScreen() {
   }, []);
 
   const handleLogout = async () => {
-    console.log('Botão de logout pressionado');
     await logout();
+  };
+
+  const handleBack = () => {
+    navigation.goBack();
   };
 
   const handlePostClick = (id: string) => {
@@ -34,49 +44,117 @@ export default function ViewPostsScreen() {
   };
 
   const renderPost = ({ item }: { item: Post }) => (
-    <TouchableOpacity onPress={() => handlePostClick(item.id)} style={styles.postCard}>
-      <Text style={styles.title}>{item.title}</Text>
-      <Text numberOfLines={2}>{item.content}</Text>
+    <TouchableOpacity
+      onPress={() => handlePostClick(item.id)}
+      style={styles.postCard}
+    >
+      <Text style={styles.postTitle}>{item.title}</Text>
+      <Text style={styles.postContent} numberOfLines={2}>
+        {item.content}
+      </Text>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-        <Text style={styles.logoutButtonText}>Sair</Text>
-      </TouchableOpacity>
+      <View style={styles.topButtons}>
+        {canGoBack && (
+          <TouchableOpacity onPress={handleBack} style={styles.iconButton}>
+            <Ionicons name="arrow-back" size={24} color={theme.colors.white} />
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+          <Text style={styles.logoutButtonText}>Sair</Text>
+        </TouchableOpacity>
+      </View>
 
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}
         renderItem={renderPost}
-        ListEmptyComponent={<Text style={styles.empty}>Nenhum post encontrado.</Text>}
+        contentContainerStyle={styles.list}
+        ListEmptyComponent={
+          <Text style={styles.empty}>Nenhum post encontrado.</Text>
+        }
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 24, flex: 1, backgroundColor: '#fff' },
+  container: {
+    flex: 1,
+    padding: theme.spacing.lg,
+    backgroundColor: theme.colors.background,
+  },
+  topButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing.md,
+  },
+  iconButton: {
+    backgroundColor: theme.colors.secondary,
+    padding: theme.spacing.sm,
+    borderRadius: theme.borderRadius,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   logoutButton: {
-    alignSelf: 'flex-end',
-    marginBottom: 8,
-    backgroundColor: '#dc2626',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
+    backgroundColor: theme.colors.primary,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.borderRadius,
   },
   logoutButtonText: {
-    color: '#fff',
+    color: theme.colors.white,
     fontWeight: 'bold',
+    fontSize: theme.typography.body.fontSize,
+  },
+  list: {
+    paddingBottom: theme.spacing.lg,
   },
   postCard: {
-    backgroundColor: '#f1f5f9',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
+    backgroundColor: theme.colors.white,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius,
+    marginBottom: theme.spacing.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
-  title: { fontSize: 18, fontWeight: 'bold', marginBottom: 8 },
-  empty: { textAlign: 'center', marginTop: 50, color: '#94a3b8' },
+  postTitle: {
+    fontSize: theme.typography.subheading.fontSize,
+    fontWeight: theme.typography.subheading.fontWeight as any,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.xs,
+  },
+  postContent: {
+    fontSize: theme.typography.body.fontSize,
+    color: theme.colors.gray,
+  },
+  empty: {
+    textAlign: 'center',
+    marginTop: theme.spacing.xl,
+    color: theme.colors.gray,
+    fontSize: theme.typography.body.fontSize,
+  },
 });
-//   empty: { textAlign: 'center', marginTop: 50, color: '#94a3b8' },
+// src/screens/view-posts/ViewPostsScreen.tsx
+// Compare this snippet from src/screens/view-posts/ViewPostsScreen.tsx:
+// // src/screens/view-posts/ViewPostsScreen.tsx
+// import React, { useEffect, useState } from 'react';
+// import {
+//   View,
+//   Text,
+//   FlatList,
+//   TouchableOpacity,
+//   StyleSheet,
+// } from 'react-native';
+// import { useNavigation } from '@react-navigation/native';
+// import { StackNavigationProp } from '@react-navigation/stack';
+// import { Ionicons } from '@expo/vector-icons'; 

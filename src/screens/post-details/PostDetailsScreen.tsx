@@ -1,25 +1,53 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList } from '@/routes/types';
-import { getPostById } from '@/services/mock-post';
+import { getPostById, Post } from '@/services/mock-post';
+import theme from '@/styles/theme';
 
-type RouteProps = RouteProp<RootStackParamList, 'post-details'>;
+type PostDetailsRouteProp = RouteProp<RootStackParamList, 'post-details'>;
 
 export default function PostDetailsScreen() {
-  const route = useRoute<RouteProps>();
-  const { id } = route.params;
+  const navigation = useNavigation();
+  const route = useRoute<PostDetailsRouteProp>();
+  const [post, setPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const [post, setPost] = useState<{ title: string; content: string } | null>(null);
+  const loadPost = async () => {
+    try {
+      const data = await getPostById(route.params.id);
+      setPost(data);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    getPostById(id).then((result) => setPost(result));
-  }, [id]);
+    loadPost();
+  }, []);
 
-  if (!post) return <Text style={styles.loading}>Carregando...</Text>;
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
+    );
+  }
+
+  if (!post) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.error}>Post não encontrado.</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Ionicons name="arrow-back" size={24} color={theme.colors.primary} />
+      </TouchableOpacity>
       <Text style={styles.title}>{post.title}</Text>
       <Text style={styles.content}>{post.content}</Text>
     </View>
@@ -27,9 +55,38 @@ export default function PostDetailsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 24 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 16 },
-  content: { fontSize: 16, color: '#334155' },
-  loading: { textAlign: 'center', marginTop: 100, fontSize: 18 },
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+    padding: theme.spacing.lg,
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.background,
+  },
+  backButton: {
+    marginBottom: theme.spacing.md,
+  },
+  title: {
+    fontSize: theme.typography.heading.fontSize,
+    fontWeight: theme.typography.heading.fontWeight as any,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.md,
+  },
+  content: {
+    fontSize: theme.typography.body.fontSize,
+    color: theme.colors.gray,
+    lineHeight: 22,
+  },
+  error: {
+    fontSize: theme.typography.body.fontSize,
+    color: theme.colors.primary,
+    textAlign: 'center',
+  },
 });
-// src/srcreens/post-details/PostDetailsScreen.tsx
+//     marginTop: theme.spacing.sm,
+//     fontSize: theme.typography.body.fontSize,
+//     fontWeight: theme.typography.body.fontWeight as any, 
+//   }, 

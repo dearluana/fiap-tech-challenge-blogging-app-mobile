@@ -1,19 +1,33 @@
+// src/components/Input.tsx
 import React from 'react';
-import { TextInput, View, Text } from 'react-native';
-import styles from './styles'; 
+import { View, TextInput, Text, StyleSheet } from 'react-native';
+import theme from '../../styles/theme';
 
-const Input = ({ label, value, onChangeText, secureTextEntry = false }) => {
+export default function Input({ label, ...rest }: any) {
   return (
-    <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={onChangeText}
-        secureTextEntry={secureTextEntry}
-      />
+    <View style={styles.container}>
+      {label && <Text style={styles.label}>{label}</Text>}
+      <TextInput style={styles.input} placeholderTextColor={theme.colors.gray} {...rest} />
     </View>
   );
-};
+}
 
-export default Input;
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: theme.spacing.md,
+  },
+  label: {
+    marginBottom: 4,
+    color: theme.colors.text,
+    fontWeight: '500',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.white,
+    padding: theme.spacing.sm,
+    borderRadius: theme.borderRadius,
+    color: theme.colors.text,
+  },
+});
+// src/components/Input.tsx

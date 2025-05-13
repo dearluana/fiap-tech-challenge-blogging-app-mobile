@@ -11,6 +11,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '@/hooks/useAuth';
 import { RootStackParamList } from '@/routes/types';
+import theme from '@/styles/theme';
 
 type LoginNavProp = StackNavigationProp<RootStackParamList, 'login'>;
 
@@ -39,6 +40,7 @@ export default function LoginScreen() {
         value={email}
         onChangeText={setEmail}
         placeholder="Digite seu email"
+        placeholderTextColor={theme.colors.gray}
         keyboardType="email-address"
         autoCapitalize="none"
       />
@@ -49,6 +51,7 @@ export default function LoginScreen() {
         value={senha}
         onChangeText={setSenha}
         placeholder="Digite sua senha"
+        placeholderTextColor={theme.colors.gray}
         secureTextEntry
       />
 
@@ -64,14 +67,50 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, backgroundColor: '#fff', justifyContent: 'center' },
-  title: { fontSize: 32, fontWeight: 'bold', marginBottom: 24, textAlign: 'center' },
-  label: { fontSize: 16, marginBottom: 8 },
-  input: { backgroundColor: '#f3f4f6', padding: 12, borderRadius: 8, marginBottom: 16 },
-  button: { backgroundColor: '#0f172a', padding: 16, borderRadius: 8, alignItems: 'center', marginBottom: 12 },
-  buttonText: { color: '#fff', fontWeight: 'bold' },
-  link: { color: '#1d4ed8', textAlign: 'center' },
+  container: {
+    flex: 1,
+    padding: theme.spacing.lg,
+    backgroundColor: theme.colors.background,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: theme.typography.heading.fontSize,
+    fontWeight: theme.typography.heading.fontWeight as any,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.xl,
+    textAlign: 'center',
+  },
+  label: {
+    fontSize: theme.typography.body.fontSize,
+    color: theme.colors.text,
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  input: {
+    backgroundColor: theme.colors.white,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    marginBottom: theme.spacing.lg,
+    color: theme.colors.text,
+  },
+  button: {
+    backgroundColor: theme.colors.primary,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius,
+    alignItems: 'center',
+    marginBottom: theme.spacing.md,
+  },
+  buttonText: {
+    color: theme.colors.white,
+    fontWeight: 'bold',
+    fontSize: theme.typography.body.fontSize,
+  },
+  link: {
+    color: theme.colors.primary,
+    textAlign: 'center',
+    fontWeight: '500',
+  },
 });
-// This code defines a login screen for a React Native application using TypeScript.
-// It uses functional components and hooks to manage state and handle user input.
-// The screen includes input fields for the user's email and password, and a button to submit the login form.   
+// src/screens/login/LoginScreen.tsx
