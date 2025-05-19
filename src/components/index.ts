@@ -1,2 +1,2 @@
-export { default as AppLayout } from './AppLayout';
-export { default as Header } from './Header/header';
+export { default as AppLayout } from './Layout';
+export { default as Header } from './Header';

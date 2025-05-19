@@ -7,6 +7,7 @@ import { Alert } from 'react-native';
 interface AuthContextType {
   userToken: string | null;
   userRole: 'aluno' | 'professor' | null;
+  username: string | null;
   loading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -17,6 +18,7 @@ export const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userToken, setUserToken] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<'aluno' | 'professor' | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,9 +26,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         const token = await AsyncStorage.getItem('@blogApp:token');
         const role = await AsyncStorage.getItem('@blogApp:role');
-        if (token && role) {
+        const storedUsername = await AsyncStorage.getItem('@blogApp:username');
+        if (token && role && storedUsername) {
           setUserToken(token);
           setUserRole(role as 'aluno' | 'professor');
+          setUsername(storedUsername);
         }
       } catch (error) {
         console.error('Erro ao carregar dados de autenticação:', error);
@@ -53,8 +57,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const fakeToken = 'fake-jwt-token';
       await AsyncStorage.setItem('@blogApp:token', fakeToken);
       await AsyncStorage.setItem('@blogApp:role', role);
+      await AsyncStorage.setItem('@blogApp:username', username);
+
       setUserToken(fakeToken);
       setUserRole(role);
+      setUsername(username);
     } catch (error) {
       console.error('Erro ao fazer login:', error);
       Alert.alert('Erro de login', 'Usuário ou senha inválidos');
@@ -64,16 +71,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     try {
       console.log('Deslogando...');
-      await AsyncStorage.multiRemove(['@blogApp:token', '@blogApp:role']);
+      await AsyncStorage.multiRemove(['@blogApp:token', '@blogApp:role', '@blogApp:username']);
       setUserToken(null);
       setUserRole(null);
+      setUsername(null);
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ userToken, userRole, loading, login, logout }}>
+    <AuthContext.Provider value={{ userToken, userRole, username, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

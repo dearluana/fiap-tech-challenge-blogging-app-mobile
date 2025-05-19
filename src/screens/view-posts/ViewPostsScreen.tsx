@@ -8,19 +8,18 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList } from '@/routes/types';
 import { getPosts, Post } from '@/services/mock-post';
 import { useAuth } from '@/hooks/useAuth';
 import theme from '@/styles/theme';
+import Layout from '@/components/Layout';
 
 type ViewPostsScreenProp = StackNavigationProp<RootStackParamList, 'view-posts'>;
 
 export default function ViewPostsScreen() {
   const navigation = useNavigation<ViewPostsScreenProp>();
-  const { logout } = useAuth();
+  const { logout, username } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
-  const canGoBack = navigation.canGoBack();
 
   const loadPosts = async () => {
     const data = await getPosts();
@@ -30,14 +29,6 @@ export default function ViewPostsScreen() {
   useEffect(() => {
     loadPosts();
   }, []);
-
-  const handleLogout = async () => {
-    await logout();
-  };
-
-  const handleBack = () => {
-    navigation.goBack();
-  };
 
   const handlePostClick = (id: string) => {
     navigation.navigate('post-details', { id });
@@ -56,19 +47,14 @@ export default function ViewPostsScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topButtons}>
-        {canGoBack && (
-          <TouchableOpacity onPress={handleBack} style={styles.iconButton}>
-            <Ionicons name="arrow-back" size={24} color={theme.colors.white} />
-          </TouchableOpacity>
-        )}
-
-        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+    <Layout
+      title={`Olá, ${username ?? 'usuário'}`}
+      footer={
+        <TouchableOpacity onPress={logout} style={styles.logoutButton}>
           <Text style={styles.logoutButtonText}>Sair</Text>
         </TouchableOpacity>
-      </View>
-
+      }
+    >
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}
@@ -78,32 +64,17 @@ export default function ViewPostsScreen() {
           <Text style={styles.empty}>Nenhum post encontrado.</Text>
         }
       />
-    </View>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: theme.spacing.lg,
-    backgroundColor: theme.colors.background,
-  },
-  topButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: theme.spacing.md,
-  },
-  iconButton: {
-    backgroundColor: theme.colors.secondary,
-    padding: theme.spacing.sm,
-    borderRadius: theme.borderRadius,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   logoutButton: {
-    backgroundColor: theme.colors.primary,
+    alignSelf: 'center',
+    marginTop: theme.spacing.md,
+    backgroundColor: theme.colors.danger,
     paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
     borderRadius: theme.borderRadius,
   },
   logoutButtonText: {
@@ -144,17 +115,4 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.body.fontSize,
   },
 });
-// src/screens/view-posts/ViewPostsScreen.tsx
 // Compare this snippet from src/screens/view-posts/ViewPostsScreen.tsx:
-// // src/screens/view-posts/ViewPostsScreen.tsx
-// import React, { useEffect, useState } from 'react';
-// import {
-//   View,
-//   Text,
-//   FlatList,
-//   TouchableOpacity,
-//   StyleSheet,
-// } from 'react-native';
-// import { useNavigation } from '@react-navigation/native';
-// import { StackNavigationProp } from '@react-navigation/stack';
-// import { Ionicons } from '@expo/vector-icons'; 

@@ -1,18 +1,24 @@
-// src/screens/dashboard/DashboardScreen.tsx
-
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/routes/types';
 import { getPosts, deletePost, Post } from '@/services/mock-post';
-import { useAuth } from '@/hooks/useAuth'; // Importando o hook de autenticação
+import { useAuth } from '@/hooks/useAuth';
+import theme from '@/styles/theme';
+import Layout from '@/components/Layout';
 
 type DashboardScreenProp = StackNavigationProp<RootStackParamList, 'dashboard'>;
 
 export default function DashboardScreen() {
   const navigation = useNavigation<DashboardScreenProp>();
-  const { logout } = useAuth(); // Função de logout do contexto
+  const { logout, username } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
 
   const loadPosts = async () => {
@@ -36,7 +42,7 @@ export default function DashboardScreen() {
   const renderPost = ({ item }: { item: Post }) => (
     <View style={styles.postCard}>
       <Text style={styles.title}>{item.title}</Text>
-      <Text>{item.content}</Text>
+      <Text style={styles.content}>{item.content}</Text>
 
       <View style={styles.buttons}>
         <TouchableOpacity
@@ -64,12 +70,14 @@ export default function DashboardScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      {/* Botão de logout no topo */}
-      <TouchableOpacity onPress={logout} style={styles.logoutButton}>
-        <Text style={styles.logoutButtonText}>Sair</Text>
-      </TouchableOpacity>
-
+    <Layout
+      title={`Olá, ${username ?? 'usuário'}`}
+      footer={
+        <TouchableOpacity onPress={logout} style={styles.logoutButton}>
+          <Text style={styles.logoutButtonText}>Sair</Text>
+        </TouchableOpacity>
+      }
+    >
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate('add-post')}
@@ -82,50 +90,91 @@ export default function DashboardScreen() {
         keyExtractor={(item) => item.id}
         renderItem={renderPost}
         ListEmptyComponent={<Text style={styles.empty}>Nenhum post encontrado.</Text>}
+        contentContainerStyle={styles.list}
       />
-    </View>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 24, flex: 1, backgroundColor: '#fff' },
+  addButton: {
+    backgroundColor: theme.colors.primary,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius,
+    alignItems: 'center',
+    marginBottom: theme.spacing.md,
+  },
+  addButtonText: {
+    color: theme.colors.white,
+    fontWeight: 'bold',
+    fontSize: theme.typography.subheading.fontSize,
+  },
+  postCard: {
+    backgroundColor: theme.colors.background,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius,
+    marginBottom: theme.spacing.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  title: {
+    fontSize: theme.typography.subheading.fontSize,
+    fontWeight: theme.typography.subheading.fontWeight as any,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.xs,
+  },
+  content: {
+    fontSize: theme.typography.body.fontSize,
+    color: theme.colors.gray,
+    marginBottom: theme.spacing.sm,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  button: {
+    backgroundColor: theme.colors.secondary,
+    paddingVertical: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.borderRadius,
+  },
+  editButton: {
+    backgroundColor: theme.colors.accent,
+  },
+  deleteButton: {
+    backgroundColor: theme.colors.danger,
+  },
+  buttonText: {
+    color: theme.colors.white,
+    fontWeight: 'bold',
+    fontSize: theme.typography.body.fontSize,
+  },
+  empty: {
+    textAlign: 'center',
+    marginTop: theme.spacing.xl,
+    color: theme.colors.gray,
+    fontSize: theme.typography.body.fontSize,
+  },
+  list: {
+    paddingBottom: theme.spacing.lg,
+  },
   logoutButton: {
-    alignSelf: 'flex-end',
-    marginBottom: 8,
-    backgroundColor: '#dc2626',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
+    alignSelf: 'center',
+    marginTop: theme.spacing.md,
+    backgroundColor: theme.colors.danger,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: theme.borderRadius,
   },
   logoutButtonText: {
-    color: '#fff',
+    color: theme.colors.white,
     fontWeight: 'bold',
+    fontSize: theme.typography.body.fontSize,
   },
-  addButton: {
-    backgroundColor: '#0f172a',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  addButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  postCard: {
-    backgroundColor: '#f1f5f9',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-  },
-  title: { fontSize: 18, fontWeight: 'bold', marginBottom: 8 },
-  buttons: { flexDirection: 'row', justifyContent: 'space-between' },
-  button: {
-    backgroundColor: '#334155',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 6,
-  },
-  editButton: { backgroundColor: '#475569' },
-  deleteButton: { backgroundColor: '#dc2626' },
-  buttonText: { color: '#fff', fontWeight: 'bold' },
-  empty: { textAlign: 'center', marginTop: 50, color: '#94a3b8' },
 });
-// src/screens/dashboard/DashboardScreen.tsx
+// Compare this snippet from src/screens/post-details/PostDetailsScreen.tsx:
