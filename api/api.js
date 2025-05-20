@@ -1,8 +1,11 @@
 import axios from 'axios';
+import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const API_URL = Constants.expoConfig?.extra?.API_URL || Constants.manifest?.extra?.API_URL;
+
 const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  baseURL: API_URL,
 });
 
 api.interceptors.request.use(
