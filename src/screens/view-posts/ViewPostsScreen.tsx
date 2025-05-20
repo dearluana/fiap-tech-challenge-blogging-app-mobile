@@ -49,11 +49,7 @@ export default function ViewPostsScreen() {
   return (
     <Layout
       title={`Olá, ${username ?? 'usuário'}`}
-      footer={
-        <TouchableOpacity onPress={logout} style={styles.logoutButton}>
-          <Text style={styles.logoutButtonText}>Sair</Text>
-        </TouchableOpacity>
-      }
+      onLogout={logout}  // Passa o logout para Layout controlar o botão Sair
     >
       <FlatList
         data={posts}
@@ -69,24 +65,11 @@ export default function ViewPostsScreen() {
 }
 
 const styles = StyleSheet.create({
-  logoutButton: {
-    alignSelf: 'center',
-    marginTop: theme.spacing.md,
-    backgroundColor: theme.colors.danger,
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.lg,
-    borderRadius: theme.borderRadius,
-  },
-  logoutButtonText: {
-    color: theme.colors.white,
-    fontWeight: 'bold',
-    fontSize: theme.typography.body.fontSize,
-  },
   list: {
     paddingBottom: theme.spacing.lg,
   },
   postCard: {
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.secondary,
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius,
     marginBottom: theme.spacing.md,
@@ -115,4 +98,3 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.body.fontSize,
   },
 });
-// Compare this snippet from src/screens/view-posts/ViewPostsScreen.tsx:

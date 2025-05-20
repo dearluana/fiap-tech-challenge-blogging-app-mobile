@@ -6,14 +6,15 @@ import theme from '@/styles/theme';
 
 interface LayoutProps {
   children: ReactNode;
-  title?: string;
+  userName?: string;
+  onLogout?: () => void;
   footer?: ReactNode;
 }
 
-export default function Layout({ children, title, footer }: LayoutProps) {
+export default function Layout({ children, userName, onLogout, footer }: LayoutProps) {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header title={title} />
+      <Header userName={userName} onLogout={onLogout} />
       <View style={styles.content}>
         {children}
       </View>
@@ -32,4 +33,3 @@ const styles = StyleSheet.create({
     padding: theme.spacing.lg,
   },
 });
-// Compare this snippet from src/screens/login/LoginScreen.tsx:

@@ -70,14 +70,7 @@ export default function DashboardScreen() {
   );
 
   return (
-    <Layout
-      title={`Olá, ${username ?? 'usuário'}`}
-      footer={
-        <TouchableOpacity onPress={logout} style={styles.logoutButton}>
-          <Text style={styles.logoutButtonText}>Sair</Text>
-        </TouchableOpacity>
-      }
-    >
+    <Layout userName={username ?? 'usuário'} onLogout={logout}>
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate('add-post')}
@@ -163,18 +156,4 @@ const styles = StyleSheet.create({
   list: {
     paddingBottom: theme.spacing.lg,
   },
-  logoutButton: {
-    alignSelf: 'center',
-    marginTop: theme.spacing.md,
-    backgroundColor: theme.colors.danger,
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.lg,
-    borderRadius: theme.borderRadius,
-  },
-  logoutButtonText: {
-    color: theme.colors.white,
-    fontWeight: 'bold',
-    fontSize: theme.typography.body.fontSize,
-  },
 });
-// Compare this snippet from src/screens/post-details/PostDetailsScreen.tsx:

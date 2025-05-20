@@ -52,7 +52,7 @@ export default function AddPostScreen() {
         style={styles.input}
         value={title}
         onChangeText={setTitle}
-        placeholder="Título"
+        placeholder="Digite o título"
         placeholderTextColor={theme.colors.gray}
       />
 
@@ -61,7 +61,7 @@ export default function AddPostScreen() {
         style={[styles.input, styles.textarea]}
         value={content}
         onChangeText={setContent}
-        placeholder="Conteúdo"
+        placeholder="Digite o conteúdo"
         placeholderTextColor={theme.colors.gray}
         multiline
         numberOfLines={6}
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   topButtons: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.lg,
   },
   iconButton: {
     backgroundColor: theme.colors.secondary,
@@ -99,14 +99,14 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.xs,
   },
   input: {
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.secondary,
     borderColor: theme.colors.border,
     borderWidth: 1,
     borderRadius: theme.borderRadius,
     padding: theme.spacing.md,
     marginBottom: theme.spacing.md,
-    fontSize: theme.typography.body.fontSize,
     color: theme.colors.text,
+    fontSize: theme.typography.body.fontSize,
   },
   textarea: {
     height: 120,
@@ -117,31 +117,11 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.md,
     borderRadius: theme.borderRadius,
     alignItems: 'center',
-    marginTop: theme.spacing.sm,
+    marginTop: theme.spacing.md,
   },
   buttonText: {
     color: theme.colors.white,
-    fontSize: theme.typography.body.fontSize,
-    fontWeight: theme.typography.body.fontWeight as any,
+    fontSize: theme.typography.subheading.fontSize,
+    fontWeight: theme.typography.subheading.fontWeight as any,
   },
 });
-// src/screens/add-post/AddPostScreen.tsx
-// Compare this snippet from src/services/mock-post.ts:
-// // src/services/mock-post.ts
-// import { Post } from '@/types';
-//
-// let posts: Post[] = [
-//   {
-//     id: '1',
-//     title: 'Post 1',
-//     content: 'Conteúdo do post 1',
-//     createdAt: new Date(),
-//   },
-//   {
-//     id: '2',
-//     title: 'Post 2',
-//     content: 'Conteúdo do post 2',
-//     createdAt: new Date(),
-//   },
-// ];
-//

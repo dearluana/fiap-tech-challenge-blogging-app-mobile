@@ -1,15 +1,13 @@
-// src/styles/colors.ts
 const colors = {
-    primary: '#e8135b',           // Vermelho FIAP
-    secondary: '#000000',         // Preto escuro
-    background: '#25292c',        // Fundo neutro claro
-    white: '#FFFFFF',
-    text: '#abc1cd',            // Azul claro
-    gray: '#7f8182',          // Cinza neutro
-    border: '#DADADA',
-    accent: '#0a0c10',         // Preto
-    danger: '#0a0c10',        
-  };
+  primary: '#e8135b',         // Vermelho FIAP suavizado
+  secondary: '#2e2e2e',       // Cinza chumbo (fundo ou secundário)
+  background: '#1a1a1a',      // Preto suave (fundo principal)
+  white: '#ffffff',
+  text: '#f0f0f0',            // Branco suave (texto principal)
+  gray: '#9ca3af',            // Cinza neutro (texto secundário, ícones)
+  border: '#3a3a3a',          // Cinza escuro (borda sutil)
+  accent: '#4b5563',          // Cinza grafite (elementos de destaque discreto)
+  danger: '#d43f3f',          // Vermelho suave para alertas/destrutivos
+};
   
-  export default colors;
-// src/styles/colors.ts  
+export default colors;
