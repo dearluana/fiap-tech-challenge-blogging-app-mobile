@@ -1,8 +1,9 @@
-// src/context/AuthContext.tsx
-
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
+import api from 'api/api';
+import { Person } from '@/types/person';
+import jwt_decode from 'jwt-decode';
 
 interface AuthContextType {
   userToken: string | null;
@@ -13,6 +14,12 @@ interface AuthContextType {
   logout: () => Promise<void>;
 }
 
+interface DecodedToken {
+  sub: number;
+  exp: number;
+  iat: number;
+}
+
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -20,6 +27,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userRole, setUserRole] = useState<'aluno' | 'professor' | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  interface AuthResponse {
+    access_token: string;
+  }
+
 
   useEffect(() => {
     const loadAuthData = async () => {
@@ -44,29 +55,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (username: string, password: string) => {
     try {
-      let role: 'aluno' | 'professor' | null = null;
+      const response = await api.post<AuthResponse>('/auth', { username, password });
+      const { access_token } = response.data;
 
-      if (username === 'admin' && password === '123') {
-        role = 'professor';
-      } else if (username === 'aluno' && password === '123') {
-        role = 'aluno';
-      } else {
-        throw new Error('Credenciais inválidas');
-      }
+      await AsyncStorage.setItem('@blogApp:token', access_token);
+      console.log(access_token)
 
-      const fakeToken = 'fake-jwt-token';
-      await AsyncStorage.setItem('@blogApp:token', fakeToken);
-      await AsyncStorage.setItem('@blogApp:role', role);
-      await AsyncStorage.setItem('@blogApp:username', username);
+      const decodedToken = jwt_decode<DecodedToken>(access_token);
+      const userId = decodedToken.sub;
 
-      setUserToken(fakeToken);
+
+      const userResponse = await api.get<Person>(`/person/${userId}`, {
+        headers: { Authorization: `Bearer ${access_token}` },
+      });
+
+      const { name, surname, email, professor } = userResponse.data;
+
+      await AsyncStorage.setItem(
+        '@blogApp:userData',
+        JSON.stringify({ name, surname, email, professor, id: userId })
+      );
+
+      const role = professor ? 'professor' : 'aluno';
+
+      setUserToken(access_token);
       setUserRole(role);
-      setUsername(username);
+
+      await AsyncStorage.setItem('@blogApp:role', role);
     } catch (error) {
       console.error('Erro ao fazer login:', error);
       Alert.alert('Erro de login', 'Usuário ou senha inválidos');
     }
   };
+
 
   const logout = async () => {
     try {

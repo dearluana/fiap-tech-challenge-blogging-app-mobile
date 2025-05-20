@@ -1,43 +1,59 @@
-// src/screens/cadastro/CadastroScreen.tsx
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import { View, Text, TextInput, Switch, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import theme from '@/styles/theme';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/routes/types';
-import { userService } from '@/services/user';
-import theme from '@/styles/theme';
+import api from '../../../api/api';
+import { Person } from '@/types/person'
 
-type CadastroNavProp = StackNavigationProp<RootStackParamList, 'cadastro'>;
+type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'cadastro'>;
 
-export default function CadastroScreen() {
-  const navigation = useNavigation<CadastroNavProp>();
-  const [nome, setNome] = useState('');
+export default function RegisterScreen() {
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [professor, setProfessor] = useState(false);
+  const [error, setError] = useState('');
+
+  const navigation = useNavigation<RegisterScreenNavigationProp>();
 
   const handleRegister = async () => {
-    if (!nome || !email || !senha) {
-      return Alert.alert('Erro', 'Preencha todos os campos.');
-    }
+    setError('');    
 
     try {
-      await userService.createUser({
-        username: nome,
+      const personResponse = await api.post<Person>('/person', {
+        name,
+        surname,
         email,
-        password: senha,
+        professor,
       });
 
-      Alert.alert('Sucesso', 'Conta criada com sucesso!');
-      navigation.navigate('login');
-    } catch (error: any) {
-      Alert.alert('Erro', error.message || 'Não foi possível criar sua conta.');
+      const personId = personResponse.data.id;
+
+      const userResponse = await api.post('/user', {
+        username,
+        password,
+        person: {
+          id: personId,
+          name,
+          surname,
+          email,
+          professor,
+        },
+      });
+
+      if (userResponse.status === 201) {
+        Alert.alert('Sucesso', 'Usuário cadastrado com sucesso');
+        navigation.navigate('login'); 
+      } else {
+        setError('Erro ao criar o usuário.');
+      }
+    } catch (err) {
+      console.error('Erro ao registrar:', err);
+      setError('Erro ao criar conta.');
     }
   };
 
@@ -45,24 +61,43 @@ export default function CadastroScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Cadastro</Text>
 
+      {error ? <Text style={[styles.label, { color: 'red', marginBottom: 12 }]}>{error}</Text> : null}
+
       <Text style={styles.label}>Nome</Text>
       <TextInput
         style={styles.input}
         placeholder="Digite seu nome"
         placeholderTextColor={theme.colors.gray}
-        value={nome}
-        onChangeText={setNome}
+        value={name}
+        onChangeText={setName}
       />
 
-      <Text style={styles.label}>Email</Text>
+      <Text style={styles.label}>Sobrenome</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Digite seu sobrenome"
+        placeholderTextColor={theme.colors.gray}
+        value={surname}
+        onChangeText={setSurname}
+      />
+
+      <Text style={styles.label}>E-mail</Text>
       <TextInput
         style={styles.input}
         placeholder="Digite seu email"
         placeholderTextColor={theme.colors.gray}
         keyboardType="email-address"
-        autoCapitalize="none"
         value={email}
         onChangeText={setEmail}
+      />
+
+      <Text style={styles.label}>Usuário</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Digite seu usuário"
+        placeholderTextColor={theme.colors.gray}
+        value={username}
+        onChangeText={setUsername}
       />
 
       <Text style={styles.label}>Senha</Text>
@@ -71,9 +106,14 @@ export default function CadastroScreen() {
         placeholder="Digite sua senha"
         placeholderTextColor={theme.colors.gray}
         secureTextEntry
-        value={senha}
-        onChangeText={setSenha}
+        value={password}
+        onChangeText={setPassword}
       />
+
+      <View style={styles.switchContainer}>
+        <Text style={styles.label}>Sou professor</Text>
+        <Switch value={professor} onValueChange={setProfessor} />
+      </View>
 
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Cadastrar</Text>
@@ -85,7 +125,6 @@ export default function CadastroScreen() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -114,6 +153,12 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.border,
     marginBottom: theme.spacing.lg,
     color: theme.colors.text,
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.lg,
+    justifyContent: 'space-between',
   },
   button: {
     backgroundColor: theme.colors.primary,

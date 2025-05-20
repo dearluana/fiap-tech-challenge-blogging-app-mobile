@@ -1,44 +1,22 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    // Caminho base do projeto
     "baseUrl": ".",
-
-    // Alias para imports absolutos
     "paths": {
       "@/*": ["src/*"]
     },
-
-    // Usa a nova transformação JSX (React 17+ e compatível com React Native)
     "jsx": "react-jsx",
-
-    // Permite compatibilidade com módulos CommonJS (como alguns de node)
     "esModuleInterop": true,
-
-    // Usa a resolução de módulos estilo Node.js
     "moduleResolution": "node",
-
-    // Permite arquivos .js (útil se houver JS misturado com TS)
     "allowJs": true,
-
-    // Permite importar arquivos .json diretamente
     "resolveJsonModule": true,
-
-    // Ativa o modo estrito do TypeScript (mais segurança)
     "strict": true,
-
-    // Não emite arquivos de saída (somente verificação de tipo)
     "noEmit": true,
-
-    // Necessário com Babel para que ele trate cada módulo de forma isolada
     "isolatedModules": true,
-
-    // Evita erros ao usar o operador `??` ou encadeamento opcional `?.`
     "target": "esnext",
     "lib": ["esnext"],
-    
-    // Compatível com React Native (caso use decorators ou metadata)
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true
   }
 }

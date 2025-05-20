@@ -9,24 +9,23 @@ import {
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';  
 import { RootStackParamList } from '@/routes/types';
 import theme from '@/styles/theme';
 
 type LoginNavProp = StackNavigationProp<RootStackParamList, 'login'>;
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const { login } = useAuth();
   const navigation = useNavigation<LoginNavProp>();
 
   const handleLogin = async () => {
     try {
-      await login(email, senha);
-      // redirecionamento feito automaticamente no AppNavigator
+      await login(username, password);
     } catch (error: any) {
-      Alert.alert('Erro', error.message);
+      Alert.alert('Erro', error.message || 'Erro ao fazer login');
     }
   };
 
@@ -34,22 +33,21 @@ export default function LoginScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
 
-      <Text style={styles.label}>Email</Text>
+      <Text style={styles.label}>Usuário</Text>
       <TextInput
         style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Digite seu email"
+        value={username}
+        onChangeText={setUsername}
+        placeholder="Digite seu usuário"
         placeholderTextColor={theme.colors.gray}
-        keyboardType="email-address"
         autoCapitalize="none"
       />
 
       <Text style={styles.label}>Senha</Text>
       <TextInput
         style={styles.input}
-        value={senha}
-        onChangeText={setSenha}
+        value={password}
+        onChangeText={setPassword}
         placeholder="Digite sua senha"
         placeholderTextColor={theme.colors.gray}
         secureTextEntry
@@ -67,50 +65,29 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: theme.spacing.lg,
-    backgroundColor: theme.colors.background,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: theme.typography.heading.fontSize,
-    fontWeight: theme.typography.heading.fontWeight as any,
-    color: theme.colors.text,
-    marginBottom: theme.spacing.xl,
-    textAlign: 'center',
-  },
-  label: {
-    fontSize: theme.typography.body.fontSize,
-    color: theme.colors.text,
-    marginBottom: 8,
-    fontWeight: '500',
-  },
+  container: { flex: 1, padding: 20, justifyContent: 'center' },
+  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20 },
+  label: { fontSize: 16, marginTop: 10 },
   input: {
-    backgroundColor: theme.colors.white,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius,
     borderWidth: 1,
-    borderColor: theme.colors.border,
-    marginBottom: theme.spacing.lg,
+    borderColor: theme.colors.gray,
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 5,
     color: theme.colors.text,
   },
   button: {
     backgroundColor: theme.colors.primary,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius,
+    padding: 15,
+    borderRadius: 5,
+    marginTop: 20,
     alignItems: 'center',
-    marginBottom: theme.spacing.md,
   },
-  buttonText: {
-    color: theme.colors.white,
-    fontWeight: 'bold',
-    fontSize: theme.typography.body.fontSize,
-  },
+  buttonText: { color: '#fff', fontWeight: 'bold' },
   link: {
+    marginTop: 15,
     color: theme.colors.primary,
     textAlign: 'center',
-    fontWeight: '500',
+    textDecorationLine: 'underline',
   },
 });
-// src/screens/login/LoginScreen.tsx
