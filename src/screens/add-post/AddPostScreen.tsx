@@ -4,11 +4,11 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Animated,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
@@ -24,17 +24,64 @@ export default function AddPostScreen() {
   const navigation = useNavigation<NavProp>();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [fadeAnim] = useState(new Animated.Value(0));
   const canGoBack = navigation.canGoBack();
+
+  const showAlert = (message: string, type: 'success' | 'error') => {
+    setErrorMessage(message);
+    if (type === 'success') {
+      setShowSuccess(true);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
+        setTimeout(() => {
+          Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          }).start(() => {
+            setShowSuccess(false);
+            navigation.navigate('dashboard');
+          });
+        }, 2000);
+      });
+    } else {
+      setShowError(true);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
+        setTimeout(() => {
+          Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          }).start(() => {
+            setShowError(false);
+          });
+        }, 3000);
+      });
+    }
+  };
 
   const handleCreate = async () => {
     if (!title || !content) {
-      Alert.alert('Erro', 'Preencha todos os campos.');
+      showAlert('Erro: Preencha todos os campos.', 'error');
       return;
     }
 
     await addPost({ title, content });
-    Alert.alert('Sucesso', 'Post criado!');
-    navigation.navigate('dashboard');
+
+    showAlert('Post adicionado com sucesso!', 'success');
+
+    setTitle('');
+    setContent('');
   };
 
   const handleBack = () => {
@@ -47,6 +94,20 @@ export default function AddPostScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={styles.container}>
+        {/* ALERTA SUCCESS */}
+        {showSuccess && (
+          <Animated.View style={[styles.successBox, { opacity: fadeAnim }]}>
+            <Text style={styles.successText}>{errorMessage}</Text>
+          </Animated.View>
+        )}
+
+        {/* ALERTA ERROR */}
+        {showError && (
+          <Animated.View style={[styles.errorBox, { opacity: fadeAnim }]}>
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          </Animated.View>
+        )}
+
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.topButtons}>
             {canGoBack && (
@@ -81,7 +142,6 @@ export default function AddPostScreen() {
           </TouchableOpacity>
         </ScrollView>
 
-        {/* Footer fixo no final da tela */}
         <Footer />
       </View>
     </KeyboardAvoidingView>
@@ -143,5 +203,45 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     fontSize: theme.typography.subheading.fontSize,
     fontWeight: theme.typography.subheading.fontWeight as any,
+  },
+  successBox: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 50 : 30,
+    alignSelf: 'center',
+    backgroundColor: theme.colors.success,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: theme.borderRadius,
+    zIndex: 999,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  successText: {
+    color: theme.colors.white,
+    fontWeight: '600',
+    fontSize: theme.typography.body.fontSize,
+  },
+  errorBox: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 50 : 30,
+    alignSelf: 'center',
+    backgroundColor: theme.colors.danger,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: theme.borderRadius,
+    zIndex: 999,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  errorText: {
+    color: theme.colors.white,
+    fontWeight: '600',
+    fontSize: theme.typography.body.fontSize,
   },
 });

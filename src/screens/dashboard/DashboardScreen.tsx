@@ -20,6 +20,8 @@ export default function DashboardScreen() {
   const navigation = useNavigation<DashboardScreenProp>();
   const { logout, username } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
   const loadPosts = async () => {
     const data = await getPosts();
@@ -34,9 +36,18 @@ export default function DashboardScreen() {
     navigation.navigate('post-details', { id });
   };
 
-  const handleDeletePost = async (id: string) => {
-    await deletePost(id);
-    loadPosts();
+  const handleDeletePost = (id: string) => {
+    setSelectedPostId(id);
+    setShowDeleteModal(true);
+  };
+
+  const onConfirmDelete = async () => {
+    if (selectedPostId) {
+      await deletePost(selectedPostId);
+      await loadPosts();
+      setSelectedPostId(null);
+    }
+    setShowDeleteModal(false);
   };
 
   const renderPost = ({ item }: { item: Post }) => (
@@ -85,6 +96,29 @@ export default function DashboardScreen() {
         ListEmptyComponent={<Text style={styles.empty}>Nenhum post encontrado.</Text>}
         contentContainerStyle={styles.list}
       />
+
+      {showDeleteModal && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Confirmar exclusão</Text>
+            <Text style={styles.modalMessage}>Deseja realmente excluir este post?</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalCancelButton]}
+                onPress={() => setShowDeleteModal(false)}
+              >
+                <Text style={styles.modalButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalConfirmButton]}
+                onPress={onConfirmDelete}
+              >
+                <Text style={styles.modalButtonText}>Sim, excluir</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
     </Layout>
   );
 }
@@ -155,5 +189,55 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingBottom: theme.spacing.lg,
+  },
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  modalContainer: {
+    backgroundColor: theme.colors.secondary,
+    padding: theme.spacing.lg,
+    borderRadius: theme.borderRadius,
+    width: '80%',
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: theme.typography.subheading.fontSize,
+    fontWeight: theme.typography.subheading.fontWeight as any,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.sm,
+  },
+  modalMessage: {
+    fontSize: theme.typography.body.fontSize,
+    color: theme.colors.gray,
+    marginBottom: theme.spacing.md,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  modalButton: {
+    paddingVertical: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.borderRadius,
+    marginLeft: theme.spacing.sm,
+  },
+  modalCancelButton: {
+    backgroundColor: theme.colors.gray,
+  },
+  modalConfirmButton: {
+    backgroundColor: theme.colors.danger,
+  },
+  modalButtonText: {
+    color: theme.colors.white,
+    fontWeight: 'bold',
+    fontSize: theme.typography.body.fontSize,
   },
 });

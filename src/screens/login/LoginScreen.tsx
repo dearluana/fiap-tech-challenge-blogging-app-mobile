@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Image,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
@@ -31,35 +32,43 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-
-      <Text style={styles.label}>Usuário</Text>
-      <TextInput
-        style={styles.input}
-        value={username}
-        onChangeText={setUsername}
-        placeholder="Digite seu usuário"
-        placeholderTextColor={theme.colors.gray}
-        autoCapitalize="none"
+      <Image
+        source={require('../../../assets/fiap-logo.png')}
+        style={styles.logo}
+        resizeMode="contain"
       />
 
-      <Text style={styles.label}>Senha</Text>
-      <TextInput
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Digite sua senha"
-        placeholderTextColor={theme.colors.gray}
-        secureTextEntry
-      />
+      <Text style={styles.title}>Bem-vindo de volta</Text>
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
+      <View style={styles.form}>
+        <Text style={styles.label}>Usuário</Text>
+        <TextInput
+          style={styles.input}
+          value={username}
+          onChangeText={setUsername}
+          placeholder="Digite seu usuário"
+          placeholderTextColor={theme.colors.gray}
+          autoCapitalize="none"
+        />
 
-      <TouchableOpacity onPress={() => navigation.navigate('cadastro')}>
-        <Text style={styles.link}>Criar conta</Text>
-      </TouchableOpacity>
+        <Text style={styles.label}>Senha</Text>
+        <TextInput
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Digite sua senha"
+          placeholderTextColor={theme.colors.gray}
+          secureTextEntry
+        />
+
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Entrar</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate('cadastro')}>
+          <Text style={styles.link}>Criar conta</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -68,15 +77,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    padding: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.lg,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 160,
+    height: 80,
+    marginBottom: theme.spacing.xl,
   },
   title: {
-    fontSize: theme.typography.heading.fontSize + 4,
+    fontSize: theme.typography.heading.fontSize + 2,
     fontWeight: theme.typography.heading.fontWeight as any,
     color: theme.colors.text,
-    marginBottom: theme.spacing.xl,
+    marginBottom: theme.spacing.lg,
     textAlign: 'center',
+  },
+  form: {
+    width: '100%',
   },
   label: {
     color: theme.colors.text,

@@ -4,18 +4,18 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Animated,
 } from 'react-native';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList } from '@/routes/types';
 import { getPostById, updatePost } from '@/services/mock-post';
 import theme from '@/styles/theme';
-import Footer from '@/components/Footer'; // Importa o Footer
+import Footer from '@/components/Footer';
 
 type RouteProps = RouteProp<RootStackParamList, 'edit-post'>;
 
@@ -27,6 +27,11 @@ export default function EditPostScreen() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState<'success' | 'danger'>('danger');
+  const [fadeAnim] = useState(new Animated.Value(0));
+
   useEffect(() => {
     getPostById(id).then((post) => {
       if (post) {
@@ -36,10 +41,38 @@ export default function EditPostScreen() {
     });
   }, [id]);
 
+  const showAlertCustom = (message: string, type: 'success' | 'danger') => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setShowAlert(true);
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setTimeout(() => {
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => setShowAlert(false));
+      }, 2000);
+    });
+  };
+
   const handleUpdate = async () => {
+    if (!title || !content) {
+      showAlertCustom('Erro: Preencha todos os campos.', 'danger');
+      return;
+    }
+
     await updatePost(id, { title, content });
-    Alert.alert('Sucesso', 'Post atualizado!');
-    navigation.goBack();
+
+    showAlertCustom('Post atualizado com sucesso!', 'success');
+
+    setTimeout(() => {
+      navigation.goBack();
+    }, 2200); // aguarda o alerta sumir antes de voltar
   };
 
   const handleBack = () => {
@@ -52,6 +85,19 @@ export default function EditPostScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={styles.container}>
+        {/* ALERTA CUSTOMIZADO */}
+        {showAlert && (
+          <Animated.View
+            style={[
+              styles.alertBox,
+              alertType === 'danger' ? styles.alertDanger : styles.alertSuccess,
+              { opacity: fadeAnim },
+            ]}
+          >
+            <Text style={styles.alertText}>{alertMessage}</Text>
+          </Animated.View>
+        )}
+
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.topButtons}>
             <TouchableOpacity onPress={handleBack} style={styles.iconButton}>
@@ -84,7 +130,6 @@ export default function EditPostScreen() {
           </TouchableOpacity>
         </ScrollView>
 
-        {/* Footer fixo ao final da tela */}
         <Footer />
       </View>
     </KeyboardAvoidingView>
@@ -147,5 +192,30 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     fontSize: theme.typography.subheading.fontSize,
     fontWeight: theme.typography.subheading.fontWeight as any,
+  },
+  alertBox: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 50 : 30,
+    alignSelf: 'center',
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: theme.borderRadius,
+    zIndex: 999,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  alertText: {
+    color: theme.colors.white,
+    fontWeight: '600',
+    fontSize: theme.typography.body.fontSize,
+  },
+  alertDanger: {
+    backgroundColor: theme.colors.danger,
+  },
+  alertSuccess: {
+    backgroundColor: theme.colors.success,
   },
 });

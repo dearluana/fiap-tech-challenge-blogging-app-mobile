@@ -8,6 +8,7 @@ const colors = {
   border: '#3a3a3a',          // Cinza escuro (borda sutil)
   accent: '#4b5563',          // Cinza grafite (elementos de destaque discreto)
   danger: '#d43f3f',          // Vermelho suave para alertas/destrutivos
+  success: '#4CAF50',         // Verde suave para alertas de sucesso (nova)
 };
   
 export default colors;
