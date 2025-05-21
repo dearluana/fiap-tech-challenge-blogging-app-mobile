@@ -12,10 +12,11 @@ import AddPostScreen from '@/screens/add-post/AddPostScreen';
 import PostDetailsScreen from '@/screens/post-details/PostDetailsScreen';
 import EditPostScreen from '@/screens/edit-post/EditPostScreen';
 import ViewPostsScreen from '@/screens/view-posts/ViewPostsScreen';
-
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
 const AppNavigator: React.FC = () => {
   const { userToken, userRole, loading } = useAuth();
@@ -63,19 +64,3 @@ const styles = StyleSheet.create({
 });
 
 export default AppNavigator;
-// src/routes/AppNavigator.tsx
-// Compare this snippet from src/screens/login/LoginScreen.tsx:
-// import React, { useState } from 'react';
-// import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-// import { useNavigation } from '@react-navigation/native';
-// import { StackNavigationProp } from '@react-navigation/stack';
-// import { RootStackParamList } from '@/routes/types';
-// import { useAuth } from '@/hooks/useAuth';
-//
-// type LoginScreenProp = StackNavigationProp<RootStackParamList, 'login'>;
-//
-// export default function LoginScreen() {
-//   const navigation = useNavigation<LoginScreenProp>();
-//   const { login } = useAuth();
-//
-//   const [email, setEmail] = useState('');

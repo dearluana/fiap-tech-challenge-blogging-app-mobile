@@ -6,10 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Image,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '@/hooks/useAuth';  
+import { useAuth } from '@/hooks/useAuth';
 import { RootStackParamList } from '@/routes/types';
 import theme from '@/styles/theme';
 
@@ -31,63 +32,101 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-
-      <Text style={styles.label}>Usuário</Text>
-      <TextInput
-        style={styles.input}
-        value={username}
-        onChangeText={setUsername}
-        placeholder="Digite seu usuário"
-        placeholderTextColor={theme.colors.gray}
-        autoCapitalize="none"
+      <Image
+        source={require('../../../assets/fiap-logo.png')}
+        style={styles.logo}
+        resizeMode="contain"
       />
 
-      <Text style={styles.label}>Senha</Text>
-      <TextInput
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Digite sua senha"
-        placeholderTextColor={theme.colors.gray}
-        secureTextEntry
-      />
+      <Text style={styles.title}>Bem-vindo de volta</Text>
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
+      <View style={styles.form}>
+        <Text style={styles.label}>Usuário</Text>
+        <TextInput
+          style={styles.input}
+          value={username}
+          onChangeText={setUsername}
+          placeholder="Digite seu usuário"
+          placeholderTextColor={theme.colors.gray}
+          autoCapitalize="none"
+        />
 
-      <TouchableOpacity onPress={() => navigation.navigate('cadastro')}>
-        <Text style={styles.link}>Criar conta</Text>
-      </TouchableOpacity>
+        <Text style={styles.label}>Senha</Text>
+        <TextInput
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Digite sua senha"
+          placeholderTextColor={theme.colors.gray}
+          secureTextEntry
+        />
+
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Entrar</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate('cadastro')}>
+          <Text style={styles.link}>Criar conta</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, justifyContent: 'center' },
-  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20 },
-  label: { fontSize: 16, marginTop: 10 },
-  input: {
-    borderWidth: 1,
-    borderColor: theme.colors.gray,
-    borderRadius: 5,
-    padding: 10,
-    marginTop: 5,
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+    paddingHorizontal: theme.spacing.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 160,
+    height: 80,
+    marginBottom: theme.spacing.xl,
+  },
+  title: {
+    fontSize: theme.typography.heading.fontSize + 2,
+    fontWeight: theme.typography.heading.fontWeight as any,
     color: theme.colors.text,
+    marginBottom: theme.spacing.lg,
+    textAlign: 'center',
+  },
+  form: {
+    width: '100%',
+  },
+  label: {
+    color: theme.colors.text,
+    fontSize: theme.typography.body.fontSize,
+    marginBottom: 4,
+  },
+  input: {
+    backgroundColor: theme.colors.accent,
+    color: theme.colors.text,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    marginBottom: theme.spacing.lg,
   },
   button: {
     backgroundColor: theme.colors.primary,
-    padding: 15,
-    borderRadius: 5,
-    marginTop: 20,
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius,
     alignItems: 'center',
+    marginTop: theme.spacing.md,
   },
-  buttonText: { color: '#fff', fontWeight: 'bold' },
+  buttonText: {
+    color: theme.colors.white,
+    fontWeight: 'bold',
+    fontSize: theme.typography.subheading.fontSize,
+  },
   link: {
-    marginTop: 15,
     color: theme.colors.primary,
+    marginTop: theme.spacing.lg,
     textAlign: 'center',
     textDecorationLine: 'underline',
+    fontSize: theme.typography.body.fontSize,
   },
 });

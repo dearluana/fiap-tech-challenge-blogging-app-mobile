@@ -4,8 +4,8 @@ import theme from '@/styles/theme';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/routes/types';
-import api from '../../../api/api';
-import { Person } from '@/types/person'
+import api from '@/api/api';
+import { Person } from '@/types/person';
 
 type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'cadastro'>;
 
@@ -21,7 +21,7 @@ export default function RegisterScreen() {
   const navigation = useNavigation<RegisterScreenNavigationProp>();
 
   const handleRegister = async () => {
-    setError('');    
+    setError('');
 
     try {
       const personResponse = await api.post<Person>('/person', {
@@ -47,7 +47,7 @@ export default function RegisterScreen() {
 
       if (userResponse.status === 201) {
         Alert.alert('Sucesso', 'Usuário cadastrado com sucesso');
-        navigation.navigate('login'); 
+        navigation.navigate('login');
       } else {
         setError('Erro ao criar o usuário.');
       }
@@ -61,7 +61,11 @@ export default function RegisterScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Cadastro</Text>
 
-      {error ? <Text style={[styles.label, { color: 'red', marginBottom: 12 }]}>{error}</Text> : null}
+      {error ? (
+        <Text style={[styles.label, { color: theme.colors.danger, marginBottom: 12 }]}>
+          {error}
+        </Text>
+      ) : null}
 
       <Text style={styles.label}>Nome</Text>
       <TextInput
@@ -112,7 +116,12 @@ export default function RegisterScreen() {
 
       <View style={styles.switchContainer}>
         <Text style={styles.label}>Sou professor</Text>
-        <Switch value={professor} onValueChange={setProfessor} />
+        <Switch
+          value={professor}
+          onValueChange={setProfessor}
+          thumbColor={professor ? theme.colors.primary : theme.colors.gray}
+          trackColor={{ true: theme.colors.accent, false: theme.colors.border }}
+        />
       </View>
 
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
@@ -125,6 +134,7 @@ export default function RegisterScreen() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -136,7 +146,7 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.heading.fontSize,
     fontWeight: theme.typography.heading.fontWeight as any,
     color: theme.colors.text,
-    marginBottom: theme.spacing.xl,
+    marginBottom: theme.spacing.xs,
     textAlign: 'center',
   },
   label: {
@@ -146,18 +156,18 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   input: {
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.accent,
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius,
     borderWidth: 1,
     borderColor: theme.colors.border,
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.sm,
     color: theme.colors.text,
   },
   switchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.sm,
     justifyContent: 'space-between',
   },
   button: {
@@ -165,7 +175,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius,
     alignItems: 'center',
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.xs,
   },
   buttonText: {
     color: theme.colors.white,

@@ -8,7 +8,7 @@ export default function Footer() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>© 2025 FIAP Blog. Todos os direitos reservados.</Text>
+      <Text style={styles.text}>© 2025 FIAP Blog.</Text>
       <Text style={styles.version}>Versão {version}</Text>
     </View>
   );
@@ -34,4 +34,3 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
-// Compare this snippet from src/screens/login/LoginScreen.tsx:

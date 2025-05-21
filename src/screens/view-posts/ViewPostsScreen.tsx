@@ -1,34 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View,
+  Alert,
   Text,
   FlatList,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/routes/types';
-import { getPosts, Post } from '@/services/mock-post';
+import { Person } from '@/types/person';
 import { useAuth } from '@/hooks/useAuth';
+import api from '@/api/api';
 import theme from '@/styles/theme';
 import Layout from '@/components/Layout';
+import jwtDecode from 'jwt-decode';
 
 type ViewPostsScreenProp = StackNavigationProp<RootStackParamList, 'view-posts'>;
 
 export default function ViewPostsScreen() {
   const navigation = useNavigation<ViewPostsScreenProp>();
   const { logout, username } = useAuth();
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [person, setPerson] = useState<Person | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const loadPosts = async () => {
-    const data = await getPosts();
-    setPosts(data);
-  };
 
   useEffect(() => {
-    loadPosts();
-  }, []);
+    const fetchData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('@blogApp:token');
+        if (!token) {
+          Alert.alert('Sessão expirada', 'Por favor, faça login novamente.');
+          navigation.replace('login');
+          return;
+        }
+
+        const decoded = jwtDecode<{ sub: number }>(token);
+        const userId = decoded.sub;
+
+        const [personResponse, postsResponse] = await Promise.all([
+          api.get<Person>(`/person/${userId}`),
+          api.get<Post[]>('/post?limit=200&page=1'),
+        ]);
+
+        setPerson(personResponse.data);
+        setPosts(postsResponse.data.reverse());
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+        Alert.alert('Erro', 'Não foi possível carregar os dados. Faça login novamente.');
+        navigation.replace('login');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [navigation]);
 
   const handlePostClick = (id: string) => {
     navigation.navigate('post-details', { id });
@@ -49,11 +77,7 @@ export default function ViewPostsScreen() {
   return (
     <Layout
       title={`Olá, ${username ?? 'usuário'}`}
-      footer={
-        <TouchableOpacity onPress={logout} style={styles.logoutButton}>
-          <Text style={styles.logoutButtonText}>Sair</Text>
-        </TouchableOpacity>
-      }
+      onLogout={logout}
     >
       <FlatList
         data={posts}
@@ -69,24 +93,11 @@ export default function ViewPostsScreen() {
 }
 
 const styles = StyleSheet.create({
-  logoutButton: {
-    alignSelf: 'center',
-    marginTop: theme.spacing.md,
-    backgroundColor: theme.colors.danger,
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.lg,
-    borderRadius: theme.borderRadius,
-  },
-  logoutButtonText: {
-    color: theme.colors.white,
-    fontWeight: 'bold',
-    fontSize: theme.typography.body.fontSize,
-  },
   list: {
     paddingBottom: theme.spacing.lg,
   },
   postCard: {
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.secondary,
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius,
     marginBottom: theme.spacing.md,
@@ -115,4 +126,3 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.body.fontSize,
   },
 });
-// Compare this snippet from src/screens/view-posts/ViewPostsScreen.tsx:

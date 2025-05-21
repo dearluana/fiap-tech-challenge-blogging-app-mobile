@@ -6,11 +6,15 @@ const API_URL = Constants.expoConfig?.extra?.API_URL || Constants.manifest?.extr
 
 const api = axios.create({
   baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 api.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem('@blogApp:token');
+     console.log('Token carregado do AsyncStorage:', token)
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }

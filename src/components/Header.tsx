@@ -1,15 +1,18 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import theme from '@/styles/theme';
 
 interface HeaderProps {
-  title?: string;
+  userName?: string;
+  onLogout?: () => void;
 }
 
-export default function Header({ title }: HeaderProps) {
+export default function Header({ userName = 'usuário', onLogout }: HeaderProps) {
   return (
     <View style={styles.container}>
-      {title && <Text style={styles.title}>{title}</Text>}
+      <Text style={styles.greeting}>Olá, {userName}</Text>
+      <TouchableOpacity onPress={onLogout} style={styles.logoutButton} activeOpacity={0.7}>
+        <Text style={styles.logoutText}>Sair</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -18,11 +21,24 @@ const styles = StyleSheet.create({
   container: {
     padding: theme.spacing.lg,
     backgroundColor: theme.colors.primary,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  title: {
+  greeting: {
     color: theme.colors.white,
     fontSize: theme.typography.heading.fontSize,
     fontWeight: theme.typography.heading.fontWeight as any,
   },
+  logoutButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: theme.colors.secondary,
+    borderRadius: 4,
+  },
+  logoutText: {
+    color: theme.colors.white,
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });
-// Compare this snippet from src/screens/login/LoginScreen.tsx:
