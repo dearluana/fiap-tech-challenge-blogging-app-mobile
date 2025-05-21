@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList } from '@/routes/types';
 import { getPostById, updatePost } from '@/services/mock-post';
 import theme from '@/styles/theme';
+import Footer from '@/components/Footer'; // Importa o Footer
 
 type RouteProps = RouteProp<RootStackParamList, 'edit-post'>;
 
@@ -47,49 +48,60 @@ export default function EditPostScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={styles.keyboardAvoiding}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.topButtons}>
-          <TouchableOpacity onPress={handleBack} style={styles.iconButton}>
-            <Ionicons name="arrow-back" size={24} color={theme.colors.white} />
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.topButtons}>
+            <TouchableOpacity onPress={handleBack} style={styles.iconButton}>
+              <Ionicons name="arrow-back" size={24} color={theme.colors.white} />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.label}>Título</Text>
+          <TextInput
+            style={styles.input}
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Digite o título"
+            placeholderTextColor={theme.colors.gray}
+          />
+
+          <Text style={styles.label}>Conteúdo</Text>
+          <TextInput
+            style={[styles.input, styles.textarea]}
+            value={content}
+            onChangeText={setContent}
+            placeholder="Digite o conteúdo"
+            placeholderTextColor={theme.colors.gray}
+            multiline
+            numberOfLines={6}
+          />
+
+          <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+            <Text style={styles.buttonText}>Atualizar</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
 
-        <Text style={styles.label}>Título</Text>
-        <TextInput
-          style={styles.input}
-          value={title}
-          onChangeText={setTitle}
-          placeholder="Digite o título"
-          placeholderTextColor={theme.colors.gray}
-        />
-
-        <Text style={styles.label}>Conteúdo</Text>
-        <TextInput
-          style={[styles.input, styles.textarea]}
-          value={content}
-          onChangeText={setContent}
-          placeholder="Digite o conteúdo"
-          placeholderTextColor={theme.colors.gray}
-          multiline
-          numberOfLines={6}
-        />
-
-        <TouchableOpacity style={styles.button} onPress={handleUpdate}>
-          <Text style={styles.buttonText}>Atualizar</Text>
-        </TouchableOpacity>
-      </ScrollView>
+        {/* Footer fixo ao final da tela */}
+        <Footer />
+      </View>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  keyboardAvoiding: {
+    flex: 1,
+  },
   container: {
-    flexGrow: 1,
-    padding: theme.spacing.lg,
+    flex: 1,
     backgroundColor: theme.colors.background,
+    justifyContent: 'space-between',
+  },
+  scrollContainer: {
+    padding: theme.spacing.lg,
   },
   topButtons: {
     marginBottom: theme.spacing.md,

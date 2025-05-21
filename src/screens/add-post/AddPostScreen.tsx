@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   Alert,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +16,7 @@ import { RootStackParamList } from '@/routes/types';
 import { addPost } from '@/services/mock-post';
 import theme from '@/styles/theme';
 import { Ionicons } from '@expo/vector-icons';
+import Footer from '@/components/Footer';
 
 type NavProp = StackNavigationProp<RootStackParamList, 'add-post'>;
 
@@ -38,47 +42,63 @@ export default function AddPostScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topButtons}>
-        {canGoBack && (
-          <TouchableOpacity onPress={handleBack} style={styles.iconButton}>
-            <Ionicons name="arrow-back" size={24} color={theme.colors.white} />
+    <KeyboardAvoidingView
+      style={styles.keyboardAvoiding}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.topButtons}>
+            {canGoBack && (
+              <TouchableOpacity onPress={handleBack} style={styles.iconButton}>
+                <Ionicons name="arrow-back" size={24} color={theme.colors.white} />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <Text style={styles.label}>Título</Text>
+          <TextInput
+            style={styles.input}
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Digite o título"
+            placeholderTextColor={theme.colors.gray}
+          />
+
+          <Text style={styles.label}>Conteúdo</Text>
+          <TextInput
+            style={[styles.input, styles.textarea]}
+            value={content}
+            onChangeText={setContent}
+            placeholder="Digite o conteúdo"
+            placeholderTextColor={theme.colors.gray}
+            multiline
+            numberOfLines={6}
+          />
+
+          <TouchableOpacity style={styles.button} onPress={handleCreate}>
+            <Text style={styles.buttonText}>Criar Post</Text>
           </TouchableOpacity>
-        )}
+        </ScrollView>
+
+        {/* Footer fixo no final da tela */}
+        <Footer />
       </View>
-
-      <Text style={styles.label}>Título</Text>
-      <TextInput
-        style={styles.input}
-        value={title}
-        onChangeText={setTitle}
-        placeholder="Digite o título"
-        placeholderTextColor={theme.colors.gray}
-      />
-
-      <Text style={styles.label}>Conteúdo</Text>
-      <TextInput
-        style={[styles.input, styles.textarea]}
-        value={content}
-        onChangeText={setContent}
-        placeholder="Digite o conteúdo"
-        placeholderTextColor={theme.colors.gray}
-        multiline
-        numberOfLines={6}
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handleCreate}>
-        <Text style={styles.buttonText}>Criar Post</Text>
-      </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  keyboardAvoiding: {
+    flex: 1,
+  },
   container: {
-    padding: theme.spacing.lg,
     flex: 1,
     backgroundColor: theme.colors.background,
+    justifyContent: 'space-between',
+  },
+  scrollContainer: {
+    padding: theme.spacing.lg,
   },
   topButtons: {
     flexDirection: 'row',

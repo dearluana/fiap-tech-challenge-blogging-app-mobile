@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList } from '@/routes/types';
 import { getPostById } from '@/services/mock-post';
 import theme from '@/styles/theme';
+import Footer from '@/components/Footer'; // <-- importando o Footer
 
 type RouteProps = RouteProp<RootStackParamList, 'post-details'>;
 
@@ -53,26 +54,34 @@ export default function PostDetailsScreen() {
           <Ionicons name="arrow-back" size={24} color={theme.colors.white} />
           <Text style={styles.backButtonText}>Voltar</Text>
         </TouchableOpacity>
+        <Footer />
       </View>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity onPress={handleBack} style={styles.backIcon}>
-        <Ionicons name="arrow-back" size={24} color={theme.colors.white} />
-      </TouchableOpacity>
+    <View style={styles.wrapper}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <TouchableOpacity onPress={handleBack} style={styles.backIcon}>
+          <Ionicons name="arrow-back" size={24} color={theme.colors.white} />
+        </TouchableOpacity>
 
-      <Text style={styles.title}>{post.title}</Text>
-      <Text style={styles.content}>{post.content}</Text>
-    </ScrollView>
+        <Text style={styles.title}>{post.title}</Text>
+        <Text style={styles.content}>{post.content}</Text>
+      </ScrollView>
+
+      <Footer />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+  },
   container: {
     flexGrow: 1,
-    backgroundColor: theme.colors.background,
     padding: theme.spacing.lg,
   },
   loadingContainer: {
