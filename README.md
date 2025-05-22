@@ -81,9 +81,6 @@ src/
 # Mobile
 git clone https://github.com/dearluana/fiap-tech-challenge-blogging-app-mobile.git
 
-# Web
-git clone https://github.com/gturcheti/fiap-tech-challenge-blogging-app-web.git
-
 # API
 git clone https://github.com/gturcheti/fiap-tech-challenge-blogging-api.git
 ```
@@ -140,27 +137,23 @@ docker-compose up --build
 
 ---
 
-### 🌐 Front-End Web
+### 🌐 Front-End Mobile - React Native
 
-Crie um `.env` com a URL da API:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:3001
-```
-
-Depois, inicie com:
+Inicie com install para instalar todas as dependências:
 
 ```bash
-npm run dev
-# ou
-yarn dev
+npm install
 ```
 
 ---
 
+Se necessário alterar o ip da API, altere no arquivo `.env` na raiz do proejeto para o desejado:
+
+EXPO_PUBLIC_API_URL=http://10.0.3.2:3000 --> altere aqui
+
 ## 📱 Executando o Mobile com Expo + Genymotion
 
-### 1. Inicie o Genymotion
+### 1. Inicie o Genymotion:
 
 Abra o Genymotion Desktop, selecione um dispositivo virtual Android (ex: Pixel 4, Android 11) e o inicie.
 
