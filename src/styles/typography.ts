@@ -1,4 +1,3 @@
-// src/styles/typography.ts
 const typography = {
   heading: {
     fontSize: 24,
@@ -19,4 +18,3 @@ const typography = {
 };
 
 export default typography;
-// src/styles/typography.ts

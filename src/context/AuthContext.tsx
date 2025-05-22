@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
-import api from 'api/api';
+import api from '@/api/api';
 import { Person } from '@/types/person';
 import jwt_decode from 'jwt-decode';
 
@@ -9,6 +9,7 @@ interface AuthContextType {
   userToken: string | null;
   userRole: 'aluno' | 'professor' | null;
   username: string | null;
+  userId: number | null;
   loading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -26,6 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userToken, setUserToken] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<'aluno' | 'professor' | null>(null);
   const [username, setUsername] = useState<string | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   interface AuthResponse {
     access_token: string;
@@ -38,11 +40,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const token = await AsyncStorage.getItem('@blogApp:token');
         const role = await AsyncStorage.getItem('@blogApp:role');
         const storedUsername = await AsyncStorage.getItem('@blogApp:username');
-        if (token && role && storedUsername) {
+        const storedUserData = await AsyncStorage.getItem('@blogApp:userData');
+        if (token && role && storedUsername && storedUserData) {
           setUserToken(token);
           setUserRole(role as 'aluno' | 'professor');
           setUsername(storedUsername);
+
+          const userData = JSON.parse(storedUserData);
+          setUserId(userData.id);
         }
+
+
       } catch (error) {
         console.error('Erro ao carregar dados de autenticação:', error);
       } finally {
@@ -80,6 +88,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       setUserToken(access_token);
       setUserRole(role);
+      setUserId(userId);
+      setUsername(name);
 
       await AsyncStorage.setItem('@blogApp:role', role);
     } catch (error) {
@@ -96,13 +106,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUserToken(null);
       setUserRole(null);
       setUsername(null);
+      setUserId(null);
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ userToken, userRole, username, loading, login, logout }}>
+    <AuthContext.Provider value={{ userToken, userRole, username, userId, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

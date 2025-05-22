@@ -1,4 +1,3 @@
-// src/styles/theme.ts
 import colors from './colors';
 import typography from './typography';
 
@@ -16,4 +15,3 @@ const theme = {
 };
 
 export default theme;
-// src/styles/theme.ts
