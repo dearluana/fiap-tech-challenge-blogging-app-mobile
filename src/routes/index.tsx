@@ -1,17 +1,11 @@
-import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
-
 import { useAuth } from '@/hooks/useAuth';
-
-import LoginScreen from '@/screens/login/LoginScreen';
-import CadastroScreen from '@/screens/cadastro/CadastroScreen';
-import DashboardScreen from '@/screens/dashboard/DashboardScreen';
-import AddPostScreen from '@/screens/add-post/AddPostScreen';
-import PostDetailsScreen from '@/screens/post-details/PostDetailsScreen';
-import EditPostScreen from '@/screens/edit-post/EditPostScreen';
-import ViewPostsScreen from '@/screens/view-posts/ViewPostsScreen';
+import LoginScreen from '@/screens/login';
+import CadastroScreen from '@/screens/register';
+import DashboardScreen from '@/screens/dashboard';
+import AddPostScreen from '@/screens/create-post';
 
 import { RootStackParamList } from './types';
 
@@ -40,9 +34,6 @@ const AppNavigator: React.FC = () => {
           <>
             <Stack.Screen name="dashboard" component={DashboardScreen} />
             <Stack.Screen name="add-post" component={AddPostScreen} />
-            <Stack.Screen name="post-details" component={PostDetailsScreen} />
-            <Stack.Screen name="edit-post" component={EditPostScreen} />
-            <Stack.Screen name="view-posts" component={ViewPostsScreen} />
           </>
         )}
       </Stack.Navigator>

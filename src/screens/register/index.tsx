@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Switch, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Switch,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import theme from '@/styles/theme';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/routes/types';
 import api from '@/api/api';
 import { Person } from '@/types/person';
+import { styles } from './styles';
+import { sanitizeName, sanitizeUsername, sanitizeEmail } from '@/helpers/mask';
 
-type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'cadastro'>;
+type RegisterScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'cadastro'
+>;
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -17,11 +29,72 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [professor, setProfessor] = useState(false);
   const [error, setError] = useState('');
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const navigation = useNavigation<RegisterScreenNavigationProp>();
 
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!name.trim()) {
+      newErrors.name = 'Nome é obrigatório.';
+    } else if (name.length < 3) {
+      newErrors.name = 'Nome deve ter ao menos 3 caracteres.';
+    } else if (name.length > 20) {
+      newErrors.name = 'Nome deve ter no máximo 20 caracteres.';
+    }
+
+    if (!surname.trim()) {
+      newErrors.surname = 'Sobrenome é obrigatório.';
+    } else if (surname.length < 3) {
+      newErrors.surname = 'Sobrenome deve ter ao menos 3 caracteres.';
+    } else if (surname.length > 20) {
+      newErrors.surname = 'Sobrenome deve ter no máximo 20 caracteres.';
+    }
+
+    if (!email.trim()) {
+      newErrors.email = 'E-mail é obrigatório.';
+    } else if (email.length < 5) {
+      newErrors.email = 'E-mail deve ter ao menos 5 caracteres.';
+    } else if (email.length > 70) {
+      newErrors.email = 'E-mail deve ter no máximo 70 caracteres.';
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        newErrors.email = 'Digite um e-mail válido.';
+      }
+    }
+
+    if (!username.trim()) {
+      newErrors.username = 'Usuário é obrigatório.';
+    } else if (username.length < 3) {
+      newErrors.username = 'Usuário deve ter ao menos 3 caracteres.';
+    } else if (username.length > 20) {
+      newErrors.username = 'Usuário deve ter no máximo 20 caracteres.';
+    }
+
+    if (!password.trim()) {
+      newErrors.password = 'Senha é obrigatória.';
+    } else if (password.length < 5) {
+      newErrors.password = 'Senha deve ter ao menos 5 caracteres.';
+    } else if (password.length > 20) {
+      newErrors.password = 'Senha deve ter no máximo 20 caracteres.';
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      return false;
+    }
+
+    return true;
+  };
+
   const handleRegister = async () => {
     setError('');
+    setErrors({});
+
+    if (!validateForm()) return;
 
     try {
       const personResponse = await api.post<Person>('/person', {
@@ -53,7 +126,7 @@ export default function RegisterScreen() {
       }
     } catch (err) {
       console.error('Erro ao registrar:', err);
-      setError('Erro ao criar conta.');
+      setError('Erro ao criar conta. Verifique os dados e tente novamente.');
     }
   };
 
@@ -73,8 +146,12 @@ export default function RegisterScreen() {
         placeholder="Digite seu nome"
         placeholderTextColor={theme.colors.gray}
         value={name}
-        onChangeText={setName}
+        autoCorrect={false}
+        autoCapitalize="words"
+        maxLength={20}
+        onChangeText={(text) => setName(sanitizeName(text))}
       />
+      {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
       <Text style={styles.label}>Sobrenome</Text>
       <TextInput
@@ -82,8 +159,12 @@ export default function RegisterScreen() {
         placeholder="Digite seu sobrenome"
         placeholderTextColor={theme.colors.gray}
         value={surname}
-        onChangeText={setSurname}
+        autoCorrect={false}
+        autoCapitalize="words"
+        maxLength={20}
+        onChangeText={(text) => setSurname(sanitizeName(text))}
       />
+      {errors.surname && <Text style={styles.errorText}>{errors.surname}</Text>}
 
       <Text style={styles.label}>E-mail</Text>
       <TextInput
@@ -92,8 +173,12 @@ export default function RegisterScreen() {
         placeholderTextColor={theme.colors.gray}
         keyboardType="email-address"
         value={email}
-        onChangeText={setEmail}
+        autoCorrect={false}
+        autoCapitalize="none"
+        maxLength={70}
+        onChangeText={(text) => setEmail(sanitizeEmail(text))}
       />
+      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
       <Text style={styles.label}>Usuário</Text>
       <TextInput
@@ -101,8 +186,12 @@ export default function RegisterScreen() {
         placeholder="Digite seu usuário"
         placeholderTextColor={theme.colors.gray}
         value={username}
-        onChangeText={setUsername}
+        autoCorrect={false}
+        autoCapitalize="none"
+        maxLength={20}
+        onChangeText={(text) => setUsername(sanitizeUsername(text))}
       />
+      {errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
 
       <Text style={styles.label}>Senha</Text>
       <TextInput
@@ -111,8 +200,12 @@ export default function RegisterScreen() {
         placeholderTextColor={theme.colors.gray}
         secureTextEntry
         value={password}
+        autoCorrect={false}
+        autoCapitalize="none"
+        maxLength={20}
         onChangeText={setPassword}
       />
+      {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
       <View style={styles.switchContainer}>
         <Text style={styles.label}>Sou professor</Text>
@@ -127,64 +220,10 @@ export default function RegisterScreen() {
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Cadastrar</Text>
       </TouchableOpacity>
-
+      
       <TouchableOpacity onPress={() => navigation.navigate('login')}>
         <Text style={styles.link}>Já tem conta? Faça login</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: theme.spacing.lg,
-    backgroundColor: theme.colors.background,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: theme.typography.heading.fontSize,
-    fontWeight: theme.typography.heading.fontWeight as any,
-    color: theme.colors.text,
-    marginBottom: theme.spacing.xs,
-    textAlign: 'center',
-  },
-  label: {
-    fontSize: theme.typography.body.fontSize,
-    color: theme.colors.text,
-    marginBottom: 8,
-    fontWeight: '500',
-  },
-  input: {
-    backgroundColor: theme.colors.accent,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    marginBottom: theme.spacing.sm,
-    color: theme.colors.text,
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: theme.spacing.sm,
-    justifyContent: 'space-between',
-  },
-  button: {
-    backgroundColor: theme.colors.primary,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius,
-    alignItems: 'center',
-    marginBottom: theme.spacing.xs,
-  },
-  buttonText: {
-    color: theme.colors.white,
-    fontWeight: 'bold',
-    fontSize: theme.typography.body.fontSize,
-  },
-  link: {
-    color: theme.colors.primary,
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-});

@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   Alert,
   Image,
 } from 'react-native';
@@ -13,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '@/hooks/useAuth';
 import { RootStackParamList } from '@/routes/types';
 import theme from '@/styles/theme';
-
+import { styles } from './styles';
 type LoginNavProp = StackNavigationProp<RootStackParamList, 'login'>;
 
 export default function LoginScreen() {
@@ -33,7 +32,7 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../../assets/fiap-logo.png')}
+        source={require('@/assets/fiap-logo.png')}
         style={styles.logo}
         resizeMode="contain"
       />
@@ -73,60 +72,3 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-    paddingHorizontal: theme.spacing.lg,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    width: 160,
-    height: 80,
-    marginBottom: theme.spacing.xl,
-  },
-  title: {
-    fontSize: theme.typography.heading.fontSize + 2,
-    fontWeight: theme.typography.heading.fontWeight as any,
-    color: theme.colors.text,
-    marginBottom: theme.spacing.lg,
-    textAlign: 'center',
-  },
-  form: {
-    width: '100%',
-  },
-  label: {
-    color: theme.colors.text,
-    fontSize: theme.typography.body.fontSize,
-    marginBottom: 4,
-  },
-  input: {
-    backgroundColor: theme.colors.accent,
-    color: theme.colors.text,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    marginBottom: theme.spacing.lg,
-  },
-  button: {
-    backgroundColor: theme.colors.primary,
-    paddingVertical: theme.spacing.md,
-    borderRadius: theme.borderRadius,
-    alignItems: 'center',
-    marginTop: theme.spacing.md,
-  },
-  buttonText: {
-    color: theme.colors.white,
-    fontWeight: 'bold',
-    fontSize: theme.typography.subheading.fontSize,
-  },
-  link: {
-    color: theme.colors.primary,
-    marginTop: theme.spacing.lg,
-    textAlign: 'center',
-    textDecorationLine: 'underline',
-    fontSize: theme.typography.body.fontSize,
-  },
-});

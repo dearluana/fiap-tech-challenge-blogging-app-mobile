@@ -6,9 +6,9 @@ export default {
     slug: 'blogging-app',
     version: '1.0.0',
     orientation: 'portrait',
-    icon: './assets/icon.png',
+    icon: './src/assets/icon.png',
     splash: {
-      image: './assets/splash.png',
+      image: './src/assets/icon.png',
       resizeMode: 'contain',
       backgroundColor: '#ffffff'
     },

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   View,
   Text,
   FlatList,
   TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
   Alert,
   TextInput,
@@ -22,6 +21,7 @@ import { Person } from '@/types/person';
 import { postService } from '@/services/post';
 import api from '@/api/api';
 import theme from '@/styles/theme';
+import { styles } from './styles';
 import Layout from '@/components/Layout';
 
 type DashboardScreenProp = StackNavigationProp<RootStackParamList, 'dashboard'>;
@@ -179,16 +179,18 @@ export default function DashboardScreen() {
             onPress={() => navigation.navigate('add-post')}
           >
             <Text style={styles.addButtonText}>+ Novo Post</Text>
+
+            <TextInput
+              placeholder="Buscar post por palavra-chave..."
+              placeholderTextColor="#9ca3af"
+              style={styles.searchInput}
+              value={searchTerm}
+              onChangeText={setSearchTerm}
+            />
           </TouchableOpacity>
         )}
 
-        <TextInput
-          placeholder="Buscar post por palavra-chave..."
-          placeholderTextColor="#9ca3af"
-          style={styles.searchInput}
-          value={searchTerm}
-          onChangeText={setSearchTerm}
-        />
+        
 
         {postsPaginated.length === 0 ? (
           <Text style={styles.emptyText}>Nenhum post encontrado.</Text>
@@ -222,7 +224,7 @@ export default function DashboardScreen() {
                         style={[styles.button, styles.deleteButton]}
                         onPress={() => handleDeletePost(item.id)}
                       >
-                        <Text style={styles.buttonText}>Excluir</Text>
+                        <Text style={styles.addButtonTextDelete}>Excluir</Text>
                       </TouchableOpacity>
                     </>
                   )}
@@ -307,7 +309,7 @@ export default function DashboardScreen() {
 
               <View style={styles.modalActions}>
                 <TouchableOpacity
-                  style={[styles.actionButton, { backgroundColor: theme.colors.danger }]}
+                  style={styles.actionButton}
                   onPress={() => {
                     setEditModalOpen(false);
                     setSelectedPost(null);
@@ -331,223 +333,3 @@ export default function DashboardScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  postCard: {
-    backgroundColor: theme.colors.background,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius,
-    marginBottom: theme.spacing.md,
-    borderWidth: 1,
-    borderColor: theme.colors.gray,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  title: {
-    fontSize: theme.typography.subheading.fontSize,
-    fontWeight: theme.typography.subheading.fontWeight as any,
-    color: theme.colors.text,
-    marginBottom: theme.spacing.xs,
-  },
-  content: {
-    fontSize: theme.typography.body.fontSize,
-    color: theme.colors.gray,
-    marginBottom: theme.spacing.sm,
-  },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  button: {
-    backgroundColor: theme.colors.accent,
-    paddingVertical: theme.spacing.xs,
-    paddingHorizontal: theme.spacing.md,
-    borderRadius: theme.borderRadius,
-  },
-  editButton: {
-    backgroundColor: theme.colors.accent,
-  },
-  deleteButton: {
-    backgroundColor: theme.colors.danger,
-  },
-  buttonText: {
-    color: theme.colors.white,
-    fontWeight: 'bold',
-    fontSize: theme.typography.body.fontSize,
-    minWidth: 50,
-    textAlign: 'center',
-    backgroundColor: theme.colors.accent,
-  },
-  container: {
-    flex: 1,
-  },
-  addButton: {
-    backgroundColor: theme.colors.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginBottom: 12,
-    alignSelf: 'flex-start',
-  },
-  addButtonText: {
-    color: theme.colors.white,
-    fontWeight: 'bold',
-  },
-  searchInput: {
-    borderWidth: 1,
-    borderColor: theme.colors.gray,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginBottom: 12,
-    color: theme.colors.white,
-  },
-  emptyText: {
-    textAlign: 'center',
-    marginTop: 40,
-    color: '#666',
-  },
-  postActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginBottom: 6,
-  },
-  iconButton: {
-    marginLeft: 12,
-  },
-  iconText: {
-    fontSize: 20,
-  },
-  postTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  postAuthor: {
-    fontSize: 12,
-    fontStyle: 'italic',
-    marginBottom: 6,
-    color: '#555',
-  },
-  postContent: {
-    fontSize: 12,
-    color: '#333',
-  },
-  viewButton: {
-    marginTop: 4,
-    alignSelf: 'flex-start',
-    backgroundColor: theme.colors.primary,
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: 6,
-  },
-  viewButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  pagination: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 12,
-  },
-  pageButton: {
-    padding: 8,
-  },
-  pageButtonDisabled: {
-    opacity: 0.4,
-  },
-  pageInfo: {
-    fontWeight: 'bold',
-    color: theme.colors.gray,
-  },
-  pageTextPrev: {
-    color: theme.colors.gray,
-  },
-  pageTextNext: {
-    color: theme.colors.gray,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    justifyContent: 'center',
-    padding: 16,
-  },
-  modalContent: {
-    backgroundColor: theme.colors.background,
-    borderRadius: 12,
-    padding: 16,
-    maxHeight: '80%',
-    color: theme.colors.white,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    color: theme.colors.text,
-  },
-  modalAuthor: {
-    fontStyle: 'italic',
-    marginBottom: 6,
-    color: theme.colors.text,
-  },
-  modalDate: {
-    fontSize: 12,
-    color: '#999',
-    marginBottom: 16,
-  },
-  modalBody: {
-    fontSize: 16,
-    color: theme.colors.gray,
-  },
-  closeButton: {
-    marginTop: 16,
-    backgroundColor: theme.colors.primary,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: theme.colors.white,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginBottom: 12,
-    fontSize: 16,
-    color: theme.colors.text,
-  },
-  textarea: {
-    borderWidth: 1,
-    borderColor: theme.colors.white,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    minHeight: 120,
-    fontSize: 16,
-    textAlignVertical: 'top',
-    color: theme.colors.text,
-  },
-  modalActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  actionButton: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginHorizontal: 6,
-    alignItems: 'center',
-  },
-  actionButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-});

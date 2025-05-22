@@ -9,7 +9,7 @@ interface HeaderProps {
 export default function Header({ userName = 'usuário', onLogout }: HeaderProps) {
   return (
     <View style={styles.container}>
-      <Text style={styles.greeting}>Olá, {userName}</Text>
+      <Text style={styles.greeting}>Olá, {userName}!</Text>
       <TouchableOpacity onPress={onLogout} style={styles.logoutButton} activeOpacity={0.7}>
         <Text style={styles.logoutText}>Sair</Text>
       </TouchableOpacity>
