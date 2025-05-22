@@ -43,22 +43,22 @@ Além disso, o projeto conta com:
 ## 📁 Estrutura do Projeto
 
 ```
-src
-    ├───api
-    ├───assets
-    ├───components
-    ├───context
-    ├───helpers
-    ├───hooks
-    ├───routes
-    ├───screens
-    │   ├───create-post
-    │   ├───dashboard
-    │   ├───login
-    │   └───register
-    ├───services
-    ├───styles
-    └───types
+src/
+├── api/
+├── assets/
+├── components/
+├── context/
+├── helpers/
+├── hooks/
+├── routes/
+├── screens/
+│ ├── create-post/
+│ ├── dashboard/
+│ ├── login/
+│ └── register/
+├── services/
+├── styles/
+└── types/
 ```
 
 ---
