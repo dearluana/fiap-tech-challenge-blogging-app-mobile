@@ -13,6 +13,7 @@
     "formik": "^2.4.6",
     "jwt-decode": "^3.1.2",
     "metro": "^0.81.0",
+    "moment-timezone": "^0.5.48",
     "react-native": "0.76.9",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-reanimated": "~3.16.1",

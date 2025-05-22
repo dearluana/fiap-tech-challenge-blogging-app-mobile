@@ -23,6 +23,7 @@ import api from '@/api/api';
 import theme from '@/styles/theme';
 import { styles } from './styles';
 import Layout from '@/components/Layout';
+import moment from 'moment-timezone';
 
 type DashboardScreenProp = StackNavigationProp<RootStackParamList, 'dashboard'>;
 
@@ -150,6 +151,9 @@ export default function DashboardScreen() {
     setViewPostModalOpen(true);
   };
 
+  moment.tz.setDefault("America/Sao_Paulo");
+  moment.locale('pt-br');
+
   const filteredPosts = posts.filter(
     (post) =>
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -190,7 +194,7 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         )}
 
-        
+
 
         {postsPaginated.length === 0 ? (
           <Text style={styles.emptyText}>Nenhum post encontrado.</Text>
@@ -267,7 +271,10 @@ export default function DashboardScreen() {
                   Autor: {viewedPost?.author ? `${viewedPost.author.name} ${viewedPost.author.surname}` : 'desconhecido'}
                 </Text>
                 <Text style={styles.modalDate}>
-                  Última atualização: {viewedPost ? new Date(viewedPost.updatedAt).toLocaleString() : ''}
+                  Criado em: {viewedPost ? moment(viewedPost.createdAt).format('LL [às] HH:mm:ss') : ''}
+                </Text>
+                <Text style={styles.modalDate}>
+                  Última atualização: {viewedPost ? moment(viewedPost.updatedAt).format('LL [às] HH:mm:ss') : ''}
                 </Text>
                 <Text style={styles.modalBody}>{viewedPost?.content}</Text>
               </ScrollView>
