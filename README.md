@@ -21,7 +21,7 @@ Além disso, o projeto conta com:
 - 🔐 Autenticação com token JWT (persistência via AsyncStorage)
 - 👥 Cadastro de usuários
 - 🗂 Listagem de posts
-- 🔎 Visualização de postagens
+- 🔎 Visualização e busca de postagens
 - ➕ Criação e ✏️ edição de posts
 - 👮 Controle de acesso por tipo de usuário (aluno ou professor)
 - 📱 Layout responsivo seguindo o padrão visual da FIAP ON
