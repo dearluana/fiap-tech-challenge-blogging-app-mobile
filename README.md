@@ -150,7 +150,7 @@ npm install
 Se necessário alterar o ip da API, altere no arquivo `.env` na raiz do projeto para o desejado:
 
 ```bash
-EXPO_PUBLIC_API_URL=http://10.0.3.2:3000 --> altere aqui
+EXPO_PUBLIC_API_URL=http://10.0.3.2:3000
 ```
 ---
 ## 📱 Executando o Mobile com Expo + Genymotion
@@ -187,20 +187,6 @@ O Expo abrirá o app diretamente no Genymotion.
 
 > ⚠️ Caso o Genymotion não abra automaticamente, clique em “a” no terminal para forçar o envio para o Android.
 
----
-
-## 🔐 Autenticação JWT
-
-- O token JWT é armazenado com segurança via `AsyncStorage`.
-- As requisições autenticadas utilizam o token no header `Authorization`.
-
-```ts
-const response = await fetch('/api/protected-route', {
-  headers: {
-    Authorization: `Bearer ${token}`
-  }
-});
-```
 
 ---
 
