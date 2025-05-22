@@ -43,22 +43,22 @@ Além disso, o projeto conta com:
 ## 📁 Estrutura do Projeto
 
 ```
-src/
-├── components/        # Componentes reutilizáveis
-├── context/           # Autenticação e roles
-├── hooks/             # Hooks personalizados
-├── routes/            # Navegação pública e privada
-├── screens/           # Telas da aplicação
-│   ├── AddPost/
-│   ├── Cadastro/
-│   ├── Dashboard/
-│   ├── EditPost/
-│   ├── Login/
-│   ├── PostDetails/
-│   └── ViewPost/
-├── services/          # Comunicação com a API
-├── styles/            # Tema, cores e tipografia
-└── App.tsx            # Arquivo principal
+src
+    ├───api
+    ├───assets
+    ├───components
+    ├───context
+    ├───helpers
+    ├───hooks
+    ├───routes
+    ├───screens
+    │   ├───create-post
+    │   ├───dashboard
+    │   ├───login
+    │   └───register
+    ├───services
+    ├───styles
+    └───types
 ```
 
 ---
