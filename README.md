@@ -147,10 +147,12 @@ npm install
 
 ---
 
-Se necessário alterar o ip da API, altere no arquivo `.env` na raiz do proejeto para o desejado:
+Se necessário alterar o ip da API, altere no arquivo `.env` na raiz do projeto para o desejado:
 
+```bash
 EXPO_PUBLIC_API_URL=http://10.0.3.2:3000 --> altere aqui
-
+```
+---
 ## 📱 Executando o Mobile com Expo + Genymotion
 
 ### 1. Inicie o Genymotion:
